@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from time import time
 import sys
 
@@ -9,7 +9,7 @@ import sys
 
 class PathGenerator():
 
-    def __init__(self, path_type='circle', speed=.1):
+    def __init__(self, path_type='infinity', speed=.05):
         self.time = time()
         self.travel_distance = 0
         self.__path_type = path_type
@@ -18,18 +18,18 @@ class PathGenerator():
         self.y_array = []
         self.distance_array = []
         self.total_distance = 0
-        self.x = 0
-        self.y = 0
-        self.x_limit = 1
+        self.x_limit = 2
         self.y_limit = 1
-        if path_type =='circle':
+        if path_type == 'circle':
             self.__generateCircle
-        elif path_type=='infinity':
+        elif path_type == 'infinity':
             self.__generateInfinity()
         elif path_type == 'square':
             self.__generateSquare
         else:
             sys.exit('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
+        self.x = self.x_array[0]
+        self.y = self.y_array[0]
 
     def getPosition(self):
         time_now = time()
@@ -71,9 +71,9 @@ class PathGenerator():
         print self.y
         print "--------------"
 
-    def plotPath(self):
-        plt.plot(self.x_array, self.y_array, self.x, self.y, 'ro')
-        plt.show()
+    # def plotPath(self):
+    #     plt.plot(self.x_array, self.y_array, self.x, self.y, 'ro')
+    #     plt.show()
 
         # def update_line(num, data, line):
         #     line.set_data(data[..., :num])
@@ -95,12 +95,12 @@ class PathGenerator():
         # plt.show()
 
 
-def main():
-    pth = PathGenerator(path_type='sdf')
-    pth.plotPath()
-    for t in range(1, 100):
-        pth.getPosition()
+# def main():
+#     pth = PathGenerator()
+#     pth.plotPath()
+#     for t in range(1, 100):
+#         pth.getPosition()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
