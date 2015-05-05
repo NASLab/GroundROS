@@ -5,11 +5,26 @@ import glob, os
 import matplotlib.pyplot as plt
 
 
-for file in glob.glob("time2015-05-04 17:26*.npy"):
-    print '++++++++++++++++++++++++++++++++++++++++++++++++++++'
-    # print file
-    # if len(np.load(file)) is 0:
-    #     print(file)
+# for file in glob.glob("*.npy"):
+#     kp = float(file[13:15])
+#     if kp == 8.0:
+#         print file
+#         data = np.load(file)[1:-1,:]
+#         # print data
+#         time = data[:,-1]-data[0,-1]
+#         # print time
+#         plt.plot(time,data[:,1])
+#         plt.show()
+
+file_name = 'long 0.0 lat 08.0 2015-05-05 18:56:48.875684.npy'
+data = np.load(file_name)[1:-1,:]
+start = 492
+end = -24
+time = data[start:end,-1]-data[start,-1]
+var = data[start:end,1]
+print time[-1]
+plt.plot(time,var)
+plt.show()
 
 longitudinal_ku = 8
 longitudinal_tu = 1.877
@@ -19,8 +34,8 @@ kd = kp*longitudinal_tu/3
 print kp,ki,kd
 
 
-lateral_ku = 60
-lateral_tu = .85
+lateral_ku = 8
+lateral_tu = 16.5/12
 kp = .2*lateral_ku
 ki = kp*2/lateral_tu
 kd = kp*lateral_tu/3

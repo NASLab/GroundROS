@@ -2,7 +2,7 @@
 
 import rospy
 import numpy as np
-import pathGenerator as pthgen
+# import pathGenerator as pthgen
 from geometry_msgs.msg import Pose2D, Twist
 import socket
 import sys
@@ -12,6 +12,7 @@ from math import pi, sin, cos
 from time import time, sleep
 import PID
 import logging
+from datetime import datetime
 
 logging.basicConfig(filename='control.log', format=50 * '=' +
                     '\n%(asctime)s %(message)s', level=logging.DEBUG)
@@ -21,28 +22,18 @@ class navigation_control(object):
 
     def __init__(self):
         logging.info('A new initialization')
-        self.history = []
-        self.time = []
-        self.longitudinal_pid = PID.PID(4, 0, 0)
-        self.lateral_pid = PID.PID(4, 0, 0)  # (12, 28.23, 3.4)
+        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
+        # kp_longitudinal = float(raw_input('Set longitudinal KP:'))
+        self.longitudinal_pid = PID.PID(0, 0, 0)
+        # kp_lateral = float(raw_input('Set lateral KP:'))
+        self.lateral_pid = PID.PID(1.6, 2.33, .733)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.settimeout(1)
-
-        timeout = 1
         ip_address = '192.168.0.25'
-        print "[Optional] Enter IP (Defualt=" + ip_address + "):"
-        rlist, _, _ = select([sys.stdin], [], [], timeout)
-        if rlist:
-            ip_address = sys.stdin.readline()
-        else:
-            ip_address = '192.168.0.25'
-
-        print ip_address, 'Has Been Selected.'
         server_address = (ip_address, 1895)
         print >>sys.stderr, 'Connecting To %s Port %s' % server_address
-
         self.sock.connect(server_address)
 
         rospy.init_node('navigation_control')
@@ -63,13 +54,19 @@ class navigation_control(object):
         try:
             self.__run__()
         except Exception, e:
+            np.save('long ' + str(self.longitudinal_pid.kp) + 'lat ' +
+                    str(self.lateral_pid.kp) + str(datetime.now()), self.logger)
             logging.exception(e)
-
             raise
+        finally:
+            # self.sock.close()
+            np.save('long ' + str(self.longitudinal_pid.kp) + ' lat ' +
+                    str(self.lateral_pid.kp) + ' ' + str(datetime.now()), self.logger)
 
     def __run__(self):
-        pth = pthgen.PathGenerator(speed=.3)
+        # pth = pthgen.PathGenerator(speed=.3)
         sleep(5)
+        degree_to_rad = pi / 180
         while not rospy.is_shutdown():
             # get position
             check = struct.unpack('<B', self.sock.recv(1))[0]
@@ -93,24 +90,19 @@ class navigation_control(object):
                 continue
 
             # calculate error
-            self.reference_x, self.reference_y = pth.getPosition()
-            # self.reference_x = 0
-            # self.reference_y = 0
+            # self.reference_x, self.reference_y = pth.getPosition()
+            self.reference_x = 0
+            self.reference_y = 0
             diff_x = self.reference_x - self.pose_msg.x / 1000
             diff_y = self.reference_y - self.pose_msg.y / 1000
             # feedback_lateral_coef = 0
             # feedback_angular_coef = .1
-            longitudinal_error = cos(self.pose_msg.theta * pi / 180)\
-                * diff_x + sin(self.pose_msg.theta * pi / 180) * diff_y
-            self.history = np.append(self.history, longitudinal_error)
-            self.time = np.append(self.time, time())
-            lateral_error = cos(self.pose_msg.theta * pi / 180) * \
-                diff_y - sin(self.pose_msg.theta * pi / 180) * diff_x
+            longitudinal_error = cos(self.pose_msg.theta * degree_to_rad) * diff_x + sin(self.pose_msg.theta * degree_to_rad) * diff_y
+            lateral_error = cos(self.pose_msg.theta * degree_to_rad) * diff_y - sin(self.pose_msg.theta * degree_to_rad) * diff_x
             feedback_linear = self.longitudinal_pid.calculate(longitudinal_error)
-
             feedback_angular = self.lateral_pid.calculate(lateral_error)
-            print feedback_linear, feedback_angular
-            # print '\r', 'linear', longitudinal_error, 'lateral', lateral_error,
+            # print feedback_linear, feedback_angular
+            print '\r', 'linear', longitudinal_error, 'lateral', lateral_error,
 
             # Calculate actoator command
             limit = 1
@@ -120,13 +112,18 @@ class navigation_control(object):
             self.twist_msg.linear.x = feedback_linear
             self.twist_msg.angular.z = feedback_angular
             self.pub_cmd.publish(self.twist_msg)
+            self.logger = np.append(self.logger, [[longitudinal_error, lateral_error,
+                                                   self.reference_x, self.reference_y,
+                                                   self.pose_msg.x, self.pose_msg.y,
+                                                   self.pose_msg.theta, time()]], axis=0)
             self.rate.sleep()
 
 
 if __name__ == "__main__":
     try:
-
         navigation_control()
     except rospy.ROSInterruptException, e:
+        np.save('long ' + str(self.longitudinal_pid.kp) + 'lat ' +
+                str(self.lateral_pid.kp) + str(datetime.now()), self.logger)
         logging.exception(e)
         print e
