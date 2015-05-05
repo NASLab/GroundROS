@@ -9,7 +9,7 @@ import sys
 
 class PathGenerator():
 
-    def __init__(self, path_type='infinity', speed=.05):
+    def __init__(self, path_type='infinity', speed=.1):
         self.time = time()
         self.travel_distance = 0
         self.__path_type = path_type
@@ -18,7 +18,7 @@ class PathGenerator():
         self.y_array = []
         self.distance_array = []
         self.total_distance = 0
-        self.x_limit = 2
+        self.x_limit = 1
         self.y_limit = 1
         if path_type == 'circle':
             self.__generateCircle
