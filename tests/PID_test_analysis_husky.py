@@ -35,7 +35,7 @@ print kp,ki,kd
 
 
 lateral_ku = 8
-lateral_tu = 16.5/12
+lateral_tu = 16.5/11
 kp = .2*lateral_ku
 ki = kp*2/lateral_tu
 kd = kp*lateral_tu/3

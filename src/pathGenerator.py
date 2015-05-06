@@ -9,7 +9,7 @@ import sys
 
 class PathGenerator():
 
-    def __init__(self, path_type='infinity', speed=.1):
+    def __init__(self, path_type='circle', speed=.1):
         self.time = time()
         self.travel_distance = 0
         self.__path_type = path_type
@@ -21,11 +21,11 @@ class PathGenerator():
         self.x_limit = 1
         self.y_limit = 1
         if path_type == 'circle':
-            self.__generateCircle
+            self.__generateCircle()
         elif path_type == 'infinity':
             self.__generateInfinity()
         elif path_type == 'square':
-            self.__generateSquare
+            self.__generateSquare()
         else:
             sys.exit('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
         self.x = self.x_array[0]
@@ -96,9 +96,9 @@ class PathGenerator():
 
 
 # def main():
-#     pth = PathGenerator()
-#     pth.plotPath()
+#     pth = PathGenerator(path_type='circle')
 #     for t in range(1, 100):
+#         pth.plotPath()
 #         pth.getPosition()
 
 
