@@ -53,14 +53,14 @@ class navigation_control(object):
         try:
             self.__run__()
         except Exception, e:
-            np.save('long ' + str(self.longitudinal_pid.kp) + 'lat ' +
-                    str(self.lateral_pid.kp) + str(datetime.now()), self.logger)
+            np.save('long ' + str(self.longitudinal_pid) + ' lat ' +
+                    str(self.lateral_pid) + str(datetime.now()), self.logger)
             logging.exception(e)
             raise
         finally:
-            # self.sock.close()
-            np.save('long ' + str(self.longitudinal_pid.kp) + ' lat ' +
-                    str(self.lateral_pid.kp) + ' ' + str(datetime.now()), self.logger)
+            self.sock.close()
+            np.save('long ' + str(self.longitudinal_pid) + ' lat ' +
+                    str(self.lateral_pid) + ' ' + str(datetime.now()), self.logger)
 
     def __run__(self):
         pth = pthgen.PathGenerator(path_type='circle',speed=.3)
