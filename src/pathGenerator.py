@@ -17,7 +17,7 @@ class PathGenerator():
         self.x_array = []
         self.y_array = []
         self.distance_array = []
-        self.total_distance = 0
+        self.total_distance = 1
         self.x_limit = 1
         self.y_limit = 1
         if path_type == 'circle':
@@ -26,10 +26,13 @@ class PathGenerator():
             self.__generateInfinity()
         elif path_type == 'square':
             self.__generateSquare()
+        elif path_type == 'point':
+            self.__generatePoint()
+            self.speed = 0
         else:
             sys.exit('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
-        self.x = self.x_array[0]
-        self.y = self.y_array[0]
+        # self.x = self.x_array[0]
+        # self.y = self.y_array[0]
 
     def getPosition(self):
         time_now = time()
@@ -66,6 +69,14 @@ class PathGenerator():
         self.y_function = interp1d(self.distance_array, self.y_array)
         pass
 
+    def __generatePoint(self):
+        x_reference = float(raw_input('Set X(meters):'))
+        y_reference = float(raw_input('Set Y(meters):'))
+        self.x = x_reference
+        self.y = y_reference
+        self.x_function = lambda x: x_reference
+        self.y_function = lambda x: y_reference
+
     def printPos(self):
         print self.x
         print self.y
@@ -96,7 +107,7 @@ class PathGenerator():
 
 
 # def main():
-#     pth = PathGenerator(path_type='circle')
+#     pth = PathGenerator(path_type='point')
 #     for t in range(1, 100):
 #         pth.plotPath()
 #         pth.getPosition()

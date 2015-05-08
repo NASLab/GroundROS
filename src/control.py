@@ -6,7 +6,6 @@ import pathGenerator as pthgen
 from geometry_msgs.msg import Pose2D, Twist
 import socket
 import sys
-from select import select
 import struct
 from math import pi, sin, cos
 from time import time, sleep
@@ -23,9 +22,9 @@ class navigation_control(object):
     def __init__(self):
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
         # kp_longitudinal = float(raw_input('Set longitudinal KP:'))
-        self.longitudinal_pid = PID.PID(4,0,0) # 1.6, 1.70484816196, 1.00106666667
-        # kp_lateral = float(raw_input('Set lateral KP:'))
-        self.lateral_pid = PID.PID(4,0,0) # 1.6, 2.13, 0.8
+        self.longitudinal_pid = PID.PID(0, 0, 0)  # 1.6, 1.70484816196, 1.00106666667
+        kp_lateral = float(raw_input('Set lateral KP:'))
+        self.lateral_pid = PID.PID(kp_lateral, 0, 0)  # 1.6, 2.13, 0.8
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -46,8 +45,8 @@ class navigation_control(object):
         self.pose_msg.theta = float('nan')
         self.twist_msg = Twist()
 
-        # self.reference_x = float(raw_input('Set X(meters):'))
-        # self.reference_y = float(raw_input('Set Y(meters):'))
+        self.reference_x = 0
+        self.reference_y = 0
         print 'Connection Established.'
         print 'Starting To Recieve And Publish Pose Data.'
         try:
@@ -63,7 +62,7 @@ class navigation_control(object):
                     str(self.lateral_pid) + ' ' + str(datetime.now()), self.logger)
 
     def __run__(self):
-        pth = pthgen.PathGenerator(path_type='circle',speed=.3)
+        pth = pthgen.PathGenerator(path_type='point', speed=.3)
         sleep(5)
         degree_to_rad = pi / 180
         while not rospy.is_shutdown():
@@ -90,8 +89,7 @@ class navigation_control(object):
 
             # calculate error
             self.reference_x, self.reference_y = pth.getPosition()
-            # self.reference_x = 0
-            # self.reference_y = 0
+
             diff_x = self.reference_x - self.pose_msg.x / 1000
             diff_y = self.reference_y - self.pose_msg.y / 1000
             longitudinal_error = cos(self.pose_msg.theta * degree_to_rad) * diff_x + sin(self.pose_msg.theta * degree_to_rad) * diff_y
@@ -99,7 +97,6 @@ class navigation_control(object):
             feedback_linear = self.longitudinal_pid.calculate(longitudinal_error)
             feedback_angular = self.lateral_pid.calculate(lateral_error)
             # print feedback_linear, feedback_angular
-            print '\r', 'linear', longitudinal_error, 'lateral', lateral_error,
 
             # Calculate actoator command
             limit = 1
