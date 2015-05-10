@@ -22,9 +22,11 @@ class navigation_control(object):
     def __init__(self):
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
         # kp_longitudinal = float(raw_input('Set longitudinal KP:'))
-        self.longitudinal_pid = PID.PID(0, 0, 0)  # 1.6, 1.70484816196, 1.00106666667
-        kp_lateral = float(raw_input('Set lateral KP:'))
-        self.lateral_pid = PID.PID(kp_lateral, 0, 0)  # 1.6, 2.13, 0.8
+        self.longitudinal_pid = PID.PID(4, 0, 0)  # 1.6, 1.70484816196, 1.00106666667
+        # kp_lateral = float(raw_input('Set lateral KP:'))
+        self.lateral_pid = PID.PID(4, 0, 0)  # 1.6, 2.13, 0.8
+        # kp_angle = float(raw_input('Set lateral KP:'))
+        self.angle_pid = PID.PID(4, 0, 0)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -45,8 +47,6 @@ class navigation_control(object):
         self.pose_msg.theta = float('nan')
         self.twist_msg = Twist()
 
-        self.reference_x = 0
-        self.reference_y = 0
         print 'Connection Established.'
         print 'Starting To Recieve And Publish Pose Data.'
         try:
@@ -62,9 +62,10 @@ class navigation_control(object):
                     str(self.lateral_pid) + ' ' + str(datetime.now()), self.logger)
 
     def __run__(self):
-        pth = pthgen.PathGenerator(path_type='point', speed=.3)
+        pth = pthgen.PathGenerator(path_type='infinity', speed=.3)
         sleep(5)
         degree_to_rad = pi / 180
+        reference_x, reference_y = pth.getPosition()
         while not rospy.is_shutdown():
             # get position
             check = struct.unpack('<B', self.sock.recv(1))[0]
@@ -81,21 +82,27 @@ class navigation_control(object):
                 continue
             self.pose_msg.x = struct.unpack('<f', recieved_data[:4])[0]
             self.pose_msg.y = struct.unpack('<f', recieved_data[4:8])[0]
-            self.pose_msg.theta = struct.unpack('<f', recieved_data[8:12])[0]
+            self.pose_msg.theta = struct.unpack('<f', recieved_data[8:12])[0] * degree_to_rad
             if self.pose_msg.x == float('nan'):
                 print 'Recieved "NaN" For Pose'
                 self.pub_cmd.publish(Twist())
                 continue
 
             # calculate error
-            self.reference_x, self.reference_y = pth.getPosition()
+            reference_x_temp, reference_y_temp = pth.getPosition()
 
-            diff_x = self.reference_x - self.pose_msg.x / 1000
-            diff_y = self.reference_y - self.pose_msg.y / 1000
-            longitudinal_error = cos(self.pose_msg.theta * degree_to_rad) * diff_x + sin(self.pose_msg.theta * degree_to_rad) * diff_y
-            lateral_error = cos(self.pose_msg.theta * degree_to_rad) * diff_y - sin(self.pose_msg.theta * degree_to_rad) * diff_x
+            reference_angle = np.arctan2(reference_y_temp - reference_y, reference_x_temp - reference_x)
+            angle_error = reference_angle - self.pose_msg.theta
+            angle_error_wrapped = (angle_error + np.pi) % (2 * np.pi) - np.pi
+            print self.pose_msg.theta, angle_error_wrapped
+            reference_x = reference_x_temp
+            reference_y = reference_y_temp
+            diff_x = reference_x - self.pose_msg.x / 1000
+            diff_y = reference_y - self.pose_msg.y / 1000
+            longitudinal_error = cos(self.pose_msg.theta) * diff_x + sin(self.pose_msg.theta) * diff_y
+            lateral_error = cos(self.pose_msg.theta) * diff_y - sin(self.pose_msg.theta) * diff_x
             feedback_linear = self.longitudinal_pid.calculate(longitudinal_error)
-            feedback_angular = self.lateral_pid.calculate(lateral_error)
+            feedback_angular = self.lateral_pid.calculate(lateral_error) + self.angle_pid.calculate(angle_error_wrapped)
             # print feedback_linear, feedback_angular
 
             # Calculate actoator command
@@ -107,7 +114,7 @@ class navigation_control(object):
             self.twist_msg.angular.z = feedback_angular
             self.pub_cmd.publish(self.twist_msg)
             self.logger = np.append(self.logger, [[longitudinal_error, lateral_error,
-                                                   self.reference_x, self.reference_y,
+                                                   reference_x, reference_y,
                                                    self.pose_msg.x, self.pose_msg.y,
                                                    self.pose_msg.theta, time()]], axis=0)
             self.rate.sleep()
