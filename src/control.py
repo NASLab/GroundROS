@@ -50,7 +50,7 @@ class navigation_control(object):
         print 'Connection Established.'
         print 'Starting To Recieve And Publish Pose Data.'
         try:
-            self.__run__()
+            self.__run()
         except Exception, e:
             np.save('long ' + str(self.longitudinal_pid) + ' lat ' +
                     str(self.lateral_pid) + str(datetime.now()), self.logger)
@@ -60,7 +60,7 @@ class navigation_control(object):
             np.save('long ' + str(self.longitudinal_pid) + ' lat ' +
                     str(self.lateral_pid) + ' theta ' + str(self.angle_pid) + ' ' + str(datetime.now()), self.logger)
 
-    def __run__(self):
+    def __run(self):
         pth = pthgen.PathGenerator(path_type='circle', speed=.3)
         sleep(5)
         degree_to_rad = pi / 180

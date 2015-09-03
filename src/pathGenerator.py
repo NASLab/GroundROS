@@ -18,8 +18,7 @@ class PathGenerator():
         self.y_array = []
         self.distance_array = []
         self.total_distance = 1
-        self.x_limit = 1
-        self.y_limit = 1
+        self.radial_boundry = 1
         if path_type == 'circle':
             self.__generateCircle()
         elif path_type == 'infinity':
@@ -44,18 +43,17 @@ class PathGenerator():
 
     def __generateCircle(self):
         angle_steps = np.linspace(0, 2 * np.pi, num=101)
-        self.x_array = self.x_limit * np.cos(angle_steps)
-        self.y_array = self.x_limit * np.sin(angle_steps)
-        self.distance_array = np.linspace(0, self.x_limit * 2 * np.pi, num=101)
-        self.total_distance = self.x_limit * 2 * np.pi
+        self.x_array = self.radial_boundry * np.cos(angle_steps)
+        self.y_array = self.radial_boundry * np.sin(angle_steps)
+        self.distance_array = np.linspace(0, self.radial_boundry * 2 * np.pi, num=101)
+        self.total_distance = self.radial_boundry * 2 * np.pi
         self.x_function = interp1d(self.distance_array, self.x_array, kind='quadratic')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='quadratic')
-        pass
 
     def __generateInfinity(self):
         angle_steps = np.linspace(0, 2 * np.pi, num=101)
-        self.x_array = self.x_limit * np.cos(angle_steps)
-        self.y_array = self.x_limit * np.sin(2 * angle_steps)
+        self.x_array = self.radial_boundry * np.cos(angle_steps)
+        self.y_array = self.radial_boundry * np.sin(2 * angle_steps)
         x_steps = np.diff(self.x_array)
         y_steps = np.diff(self.y_array)
         hypot_steps = np.hypot(x_steps, y_steps)
@@ -68,6 +66,15 @@ class PathGenerator():
         self.x_function = interp1d(self.distance_array, self.x_array)
         self.y_function = interp1d(self.distance_array, self.y_array)
         pass
+
+    def __generateLineWithStepInDirection(self):
+        slope_1 = 0
+        slope_2 = np.pi/6
+        self.x_array = np.cos(slope_1)*np.linspace(-self.radial_boundry,0,num = 51)
+        self.y_array = np.sin(slope_1)*np.linspace(-self.radial_boundry,0, num = 51)
+        self.distance_array = np.linspace(0, self.radial_boundry, num=51)
+        self.x_function = interp1d(self.distance_array, self.x_array, kind='linear')
+        self.y_function = interp1d(self.distance_array, self.y_array, kind='linear')
 
     def __generatePoint(self):
         x_reference = float(raw_input('Set X(meters):'))
