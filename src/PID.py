@@ -28,4 +28,4 @@ class PID(object):
         return control_input
 
     def __str__(self):
-        return str(self.kp)+' '+str(self.ki)+' '+str(self.kd)
+        return 'Gains: '+str(self.kp)+' '+str(self.ki)+' '+str(self.kd)

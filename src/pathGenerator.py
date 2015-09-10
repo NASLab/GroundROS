@@ -1,10 +1,9 @@
 import numpy as np
 from scipy.interpolate import interp1d
-# import matplotlib.pyplot as plt
 from time import time
 import sys
 
-# Generate a set of paths
+# Generate a path
 
 
 class PathGenerator():
@@ -23,15 +22,25 @@ class PathGenerator():
             self.__generateCircle()
         elif path_type == 'infinity':
             self.__generateInfinity()
+        elif path_type == 'broken_line':
+            self.__generateBrokenLine()
+        elif path_type == 'two_lines':
+            self.__twoLines()
         elif path_type == 'square':
             self.__generateSquare()
+        elif path_type == 'line':
+            self.__generateLine()
         elif path_type == 'point':
-            self.__generatePoint()
             self.speed = 0
+            self.__generatePoint()
         else:
             sys.exit('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
         # self.x = self.x_array[0]
         # self.y = self.y_array[0]
+
+    def setVelocity(self, velocity):
+        if self.path_type is not 'point':
+            self.speed = velocity
 
     def getPosition(self):
         time_now = time()
@@ -40,6 +49,11 @@ class PathGenerator():
         self.x = self.x_function(self.travel_distance)
         self.y = self.y_function(self.travel_distance)
         return self.x, self.y
+
+    def setPoint(self, x, y):
+        self.speed = 0
+        self.x_function = lambda x: x
+        self.y_function = lambda x: y
 
     def __generateCircle(self):
         angle_steps = np.linspace(0, 2 * np.pi, num=101)
@@ -65,60 +79,40 @@ class PathGenerator():
     def __generateSquare(self):
         self.x_function = interp1d(self.distance_array, self.x_array)
         self.y_function = interp1d(self.distance_array, self.y_array)
-        pass
 
-    def __generateLineWithStepInDirection(self):
-        slope_1 = 0
-        slope_2 = np.pi/6
-        self.x_array = np.cos(slope_1)*np.linspace(-self.radial_boundry,0,num = 51)
-        self.y_array = np.sin(slope_1)*np.linspace(-self.radial_boundry,0, num = 51)
-        self.distance_array = np.linspace(0, self.radial_boundry, num=51)
+    def __generateLine(self, slope=np.pi/6):
+        self.x_array = np.cos(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.y_array = np.sin(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
+        self.total_distance = self.radial_boundry * 2
+        self.x_function = lambda x: x*np.cos(slope) - np.cos(slope)
+        self.y_function = lambda x: x*np.sin(slope) - np.sin(slope)
+
+    def __generateBrokenLine(self, slope_1=0, slope_2=np.pi / 6):
+        x_array_1 = np.cos(slope_1) * np.linspace(-self.radial_boundry, 0, num=51)
+        x_array_2 = np.cos(slope_2) * np.linspace(0, self.radial_boundry, num=51)
+        self.x_array = np.concatenate([x_array_1, x_array_2[1:]])
+        y_array_1 = np.sin(slope_1) * np.linspace(-self.radial_boundry, 0, num=51)
+        y_array_2 = np.sin(slope_2) * np.linspace(0, self.radial_boundry, num=51)
+        self.y_array = np.concatenate([y_array_1, y_array_2[1:]])
+        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
+        self.total_distance = self.radial_boundry * 2
+        self.x_function = interp1d(self.distance_array, self.x_array, kind='linear')
+        self.y_function = interp1d(self.distance_array, self.y_array, kind='linear')
+
+    def __twoLines(self):
+        self.x_array = np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.total_distance = self.radial_boundry * 2
+        self.y_array = np.concatenate([[-self.radial_boundry / 4.0 for i in range(51)], [self.radial_boundry / 4.0 for i in range(50)]])
+        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
         self.x_function = interp1d(self.distance_array, self.x_array, kind='linear')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='linear')
 
     def __generatePoint(self):
-        x_reference = float(raw_input('Set X(meters):'))
-        y_reference = float(raw_input('Set Y(meters):'))
-        self.x = x_reference
-        self.y = y_reference
-        self.x_function = lambda x: x_reference
-        self.y_function = lambda x: y_reference
+        self.x_function = lambda x: 0
+        self.y_function = lambda x: 0
 
     def printPos(self):
         print self.x
         print self.y
         print "--------------"
-
-    # def plotPath(self):
-    #     plt.plot(self.x_array, self.y_array, self.x, self.y, 'ro')
-    #     plt.show()
-
-        # def update_line(num, data, line):
-        #     line.set_data(data[..., :num])
-        #     return line,
-
-        # fig1 = plt.figure()
-
-        # data = np.array((x, y))
-        # l, = plt.plot([], [], 'r-')
-        # plt.xlim(-1.5, 1.5)
-        # plt.ylim(-1.5, 1.5)
-        # plt.xlabel('X')
-        # plt.ylabel('Y')
-        # plt.title('position')
-        # plt.grid()
-        # line_ani = animation.FuncAnimation(fig1, update_line,
-        #                                    len(data[0]), fargs=(data, l), interval=200, blit=True)
-
-        # plt.show()
-
-
-# def main():
-#     pth = PathGenerator(path_type='point')
-#     for t in range(1, 100):
-#         pth.plotPath()
-#         pth.getPosition()
-
-
-# if __name__ == "__main__":
-#     main()
