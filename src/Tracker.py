@@ -1,12 +1,18 @@
 import numpy as np
+import ActuationControl as AC
 
 
 class Tracker(object):
 
     def __init__(self, longitutnal_gain=4, lateral_gain=5, angular_gain=4):
+        self.static_target = 
+        self.dynamic_target = 
+        self.navigate_to_static_target = 
+        self.navigate_to_dynamic_target = 
         pass
 
     def goToStaticPoint(self, x, y, theta=float('nan')):
+        errors = move_to_point.calculateError(self.pose_msg)
         while (abs(errors[0][0]) > bound or abs(errors[0][1]) > bound) and counter < 300:
             while abs(errors[0][1]) > bound and counter < 300:
                 print 'fixing lat'
@@ -30,6 +36,7 @@ class Tracker(object):
                 self.rate.sleep()
 
     def faceStaticDirection(self, theta):
+        errors = move_to_point.calculateError(self.pose_msg)
         while abs(angle_error_wrapped) > (1 * np.pi / 180) and counter < 300:
             print 'fixing orientation'
             # reference_x_temp, reference_y_temp = self.path.getPosition()
