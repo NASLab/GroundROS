@@ -24,8 +24,17 @@ class PID(object):
         self.integral_error = self.integral_error + error * elapsed_time
         self.time = time_now
         self.error_previous = error
-
         return control_input
 
+    def chageGains(self, kp=None, ki=None, kd=None):
+        if kp is not None:
+            self.kp = kp
+
+        if ki is not None:
+            self.ki = ki
+
+        if kd is not None:
+            self.kd = kd
+
     def __str__(self):
-        return 'Gains: '+str(self.kp)+' '+str(self.ki)+' '+str(self.kd)
+        return 'Gains: ' + str(self.kp) + ' ' + str(self.ki) + ' ' + str(self.kd)
