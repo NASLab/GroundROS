@@ -1,0 +1,17 @@
+//nomnoml.com
+[Development process|
+[Robotic level|
+[Hardware level|
+[Software level|
+[Software;functions and classes]
+[Software unittests ;(i.e. send predefined; inputs to function and; see if the output is equal; to precalculated value)]
+]
+[Hardware description files ;(e.g. Husky maximum allowed ;velocity, dimensions, IP addresses; of different components ;(Lidar, Qualisys communication)]
+]
+[Hardware unittests (e.g. connect; and disconnect from network, ;actuate motors, read sensor values)]
+]
+[<actor>Developer]
+]
+
+
+[<abstract>Unittests: Are a set of validation functions; that developer run after making major changes; in a program to narrow down the origin of bugs]
