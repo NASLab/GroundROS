@@ -7,8 +7,8 @@ from sensor_msgs.msg import LaserScan
 
 def distanceArray(data):
 
-    right_summation = 0
-    left_summation = 0
+    right_summation = 0.0
+    left_summation = 0.0
     for dist in data.ranges[:271]:
         dist = min(dist, range_limit)
         right_summation = right_summation + dist
@@ -18,11 +18,11 @@ def distanceArray(data):
         left_summation = left_summation + dist
 
     if right_summation > left_summation + margin:
-        velocity = 1
+        velocity = 1.0
     elif left_summation > right_summation + margin:
-        velocity = -1
+        velocity = -1.0
     else:
-        velocity = 0
+        velocity = 0.0
 
     twist_msg.angular.z = velocity
     pub.publish(twist_msg)
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     machine = 'husky'
     try:
         twist_msg = Twist()
-        margin = 5
+        margin = 5.0
         range_limit = 1.5
 
         rospy.init_node('shybot')
