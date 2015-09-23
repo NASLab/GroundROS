@@ -23,5 +23,5 @@ def wrapAngle2Pi(theta):
     return (theta + pi) % (2 * pi) - pi
 
 
-def degree_to_radian(theta):
+def degreeToRadian(theta):
     return theta * radian_over_degree

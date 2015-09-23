@@ -2,6 +2,13 @@ from time import time
 
 nan_var = float('nan')
 
+class ControlSystemError(Exception):
+    def __init__(self, message, errors=-1):
+
+        # Call the base class constructor with the parameters it needs
+        super(ControlSystemError, self).__init__(message)
+
+
 
 class ControlSystem(object):
 
