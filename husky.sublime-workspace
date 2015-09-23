@@ -1,0 +1,1483 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ang",
+				"angle_p	param"
+			],
+			[
+				"x",
+				"x_function	statement"
+			],
+			[
+				"erro",
+				"error_minimizer	param"
+			],
+			[
+				"Ac",
+				"actuationCalculation	function"
+			],
+			[
+				"move",
+				"move_to_point	statement"
+			],
+			[
+				"exp",
+				"experimental_results"
+			],
+			[
+				"calcu",
+				"calculateError	function"
+			],
+			[
+				"ac",
+				"act_control	statement"
+			],
+			[
+				"late",
+				"lateral_p	param"
+			],
+			[
+				"long",
+				"longitudinal_p	param"
+			],
+			[
+				"feedb",
+				"feedback_angular	statement"
+			],
+			[
+				"feedback",
+				"feedback_linear	statement"
+			],
+			[
+				"H",
+				"HuskeyConnect	class"
+			],
+			[
+				"ref",
+				"reference_x	statement"
+			],
+			[
+				"diff",
+				"diff_y	statement"
+			],
+			[
+				"pose",
+				"pose_msg_theta	statement"
+			],
+			[
+				"pose_msg_",
+				"pose_msg_x	statement"
+			],
+			[
+				"slope",
+				"slope_2"
+			],
+			[
+				"ra",
+				"radial_boundry	statement"
+			],
+			[
+				"x_array",
+				"x_array_1	statement"
+			],
+			[
+				"l",
+				"x_limit"
+			],
+			[
+				"sta",
+				"states_rates"
+			],
+			[
+				"Inver",
+				"InvertedPendulum"
+			],
+			[
+				"positio",
+				"position_z"
+			],
+			[
+				"position",
+				"position_y"
+			],
+			[
+				"conn",
+				"connection_status"
+			],
+			[
+				"recieve",
+				"recieved_value"
+			],
+			[
+				"socket",
+				"socket_handle"
+			],
+			[
+				"soc",
+				"socket_handle"
+			],
+			[
+				"re",
+				"recvline"
+			],
+			[
+				"index",
+				"index_of_best"
+			],
+			[
+				"coverage",
+				"coverage_matrix"
+			],
+			[
+				"else",
+				"else	else"
+			],
+			[
+				"set",
+				"setColor"
+			],
+			[
+				"siz",
+				"population_size"
+			],
+			[
+				"population",
+				"population"
+			],
+			[
+				"number",
+				"number_of_selected"
+			],
+			[
+				"mutation",
+				"mutation_rate"
+			],
+			[
+				"mutatio",
+				"mutation_rate"
+			],
+			[
+				"para",
+				"parameter-4"
+			],
+			[
+				"d",
+				"deleteFigure"
+			],
+			[
+				"pare1",
+				"parent1"
+			],
+			[
+				"num",
+				"number_of_selected"
+			],
+			[
+				"crosso",
+				"crossover_point"
+			],
+			[
+				"popu",
+				"population_size"
+			],
+			[
+				"number_of",
+				"number_of_selected"
+			],
+			[
+				"figure",
+				"figure_handle"
+			],
+			[
+				"populat",
+				"population"
+			],
+			[
+				"pa",
+				"parent1"
+			],
+			[
+				"crosover",
+				"crossover_point"
+			],
+			[
+				"numb",
+				"number_of_kept"
+			],
+			[
+				"po",
+				"population_size"
+			],
+			[
+				"popul",
+				"population"
+			],
+			[
+				"nu",
+				"number_of_selected"
+			],
+			[
+				"mutat",
+				"mutation_rate"
+			],
+			[
+				"sort",
+				"sort_indexes"
+			],
+			[
+				"sor",
+				"sort_indexes"
+			],
+			[
+				"covera",
+				"coverage_matrix"
+			],
+			[
+				"directio",
+				"direction_array"
+			],
+			[
+				"trajecotry",
+				"trajectory"
+			],
+			[
+				"error",
+				"error_lat	statement"
+			],
+			[
+				"refe",
+				"reference_y_temp	statement"
+			],
+			[
+				"arct",
+				"arctan2	instance"
+			],
+			[
+				"refere",
+				"reference_y_temp	statement"
+			],
+			[
+				"refee",
+				"reference_x"
+			],
+			[
+				"path",
+				"path_type	param"
+			],
+			[
+				"later",
+				"lateral_tu	statement"
+			],
+			[
+				"ECo",
+				"ECONNRESET	instance"
+			],
+			[
+				"kp",
+				"kp_longitudinal	statement"
+			],
+			[
+				"refer",
+				"reference_y	statement"
+			],
+			[
+				"date",
+				"datetime	class"
+			],
+			[
+				"feed",
+				"feedback_angular	statement"
+			],
+			[
+				"lon",
+				"longitudinal_pid	statement"
+			],
+			[
+				"ero",
+				"error_previous"
+			],
+			[
+				"time",
+				"time_laps	statement"
+			],
+			[
+				"la",
+				"lateral_file_1	statement"
+			],
+			[
+				"Longti",
+				"feedback_longitudinal_coef"
+			],
+			[
+				"try",
+				"try	Try/Except/Finally"
+			],
+			[
+				"__gene",
+				"__generateSquare	function"
+			],
+			[
+				"g",
+				"getPosition	function"
+			],
+			[
+				"hy",
+				"hypot_steps	statement"
+			],
+			[
+				"plo",
+				"plotPath	function"
+			],
+			[
+				"obs",
+				"obstalce"
+			],
+			[
+				"tick",
+				"tick_length"
+			],
+			[
+				"axis",
+				"axis_end"
+			],
+			[
+				"axi",
+				"axis_end"
+			],
+			[
+				"image",
+				"image_hieght"
+			],
+			[
+				"orig",
+				"original_hieght"
+			],
+			[
+				"origin",
+				"original_length"
+			],
+			[
+				"image_",
+				"image_length"
+			],
+			[
+				"origi",
+				"original_length"
+			],
+			[
+				"sc",
+				"screen_pix"
+			],
+			[
+				"final",
+				"final_length"
+			],
+			[
+				"fin",
+				"final_length"
+			],
+			[
+				"parse",
+				"parser_obj"
+			],
+			[
+				"prev",
+				"prev_error"
+			],
+			[
+				"integr",
+				"integral_error"
+			],
+			[
+				"x_re",
+				"X_present"
+			],
+			[
+				"linaer",
+				"Linear_Momentum"
+			],
+			[
+				"Rate",
+				"Rate_Angular_Momentum"
+			],
+			[
+				"angular",
+				"Angular_Momentum"
+			],
+			[
+				"Linear",
+				"Linear_Momentum"
+			],
+			[
+				"linear",
+				"Linear_Momentum"
+			],
+			[
+				"number_",
+				"number_of_obstacles"
+			],
+			[
+				"first",
+				"first_obstacle_end"
+			],
+			[
+				"fisr",
+				"first_obstacle_end"
+			],
+			[
+				"end_",
+				"end_index"
+			],
+			[
+				"end",
+				"end_found"
+			],
+			[
+				"theta",
+				"theta_desired_current"
+			],
+			[
+				"theta_d",
+				"theta_dDot"
+			],
+			[
+				"start",
+				"start_index"
+			],
+			[
+				"obstacl",
+				"obstacle_element"
+			],
+			[
+				"obsta",
+				"obstacle_element"
+			],
+			[
+				"rea",
+				"readings"
+			],
+			[
+				"safe",
+				"safety_radius_sq"
+			],
+			[
+				"distance",
+				"distance_y"
+			],
+			[
+				"actua",
+				"actual_velocity"
+			],
+			[
+				"actual",
+				"actual_new_velocity"
+			],
+			[
+				"sim",
+				"sim_step"
+			],
+			[
+				"sie",
+				"sim_step"
+			],
+			[
+				"err",
+				"err_integrated"
+			],
+			[
+				"tra",
+				"trajectory"
+			],
+			[
+				"trav",
+				"travel_distance"
+			],
+			[
+				"y_d",
+				"y_dif"
+			],
+			[
+				"is",
+				"isempty"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"dire",
+				"direcotry_check"
+			],
+			[
+				"folder",
+				"folder_address"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/pathGenerator.py",
+			"settings":
+			{
+				"buffer_size": 5254,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/control.py",
+			"settings":
+			{
+				"buffer_size": 2751,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Tracker.py",
+			"settings":
+			{
+				"buffer_size": 2826,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "ros.tcl",
+			"settings":
+			{
+				"buffer_size": 993,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/naslab/Barzin/talki-talki/talki_test.py",
+			"settings":
+			{
+				"buffer_size": 286,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/naslab/Barzin/talki-talki/Talker.py",
+			"settings":
+			{
+				"buffer_size": 685,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/naslab/Barzin/qualisys-rt/send_to_agents.py",
+			"settings":
+			{
+				"buffer_size": 5683,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ActuationControl.py",
+			"settings":
+			{
+				"buffer_size": 2218,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/shybot.py",
+			"settings":
+			{
+				"buffer_size": 1617,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/LaTeXTools/LaTeX.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Chrome.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/LaTeXTools/LaTeX.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 400.0,
+		"last_filter": "latex",
+		"selected_items":
+		[
+			[
+				"latex",
+				"LaTexTools: Delete temporary files"
+			],
+			[
+				"",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"late",
+				"LaTexTools: Delete temporary files"
+			],
+			[
+				"format",
+				"SublimeAStyleFormatter: Format Current File"
+			],
+			[
+				"astyl",
+				"SublimeAStyleFormatter: Format Current File"
+			],
+			[
+				"astyle",
+				"SublimeAStyleFormatter: Format Current File"
+			],
+			[
+				"jum",
+				"LaTeXTools: Jump to PDF"
+			],
+			[
+				"jump",
+				"LaTeXTools: Jump to PDF"
+			],
+			[
+				"latextool",
+				"LaTeXTools: Reconfigure and migrate settings"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"git ad",
+				"Git: Add Current File"
+			],
+			[
+				"push c",
+				"Git: Push Current Branch"
+			],
+			[
+				"push cu",
+				"Git: Push Current Branch"
+			],
+			[
+				"push",
+				"Git: Push"
+			],
+			[
+				"git co",
+				"Git: Commit"
+			],
+			[
+				"git add",
+				"Git: Add..."
+			],
+			[
+				"diff",
+				"Git: Diff Current File"
+			],
+			[
+				"sattus",
+				"Git: Status"
+			],
+			[
+				"pus",
+				"Git: Push"
+			],
+			[
+				"git push cu",
+				"Git: Push Current Branch"
+			],
+			[
+				"gs",
+				"Git: Status"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"git init",
+				"Git: Diff Current File (Ignore Whitespace)"
+			],
+			[
+				"git bran",
+				"Git: Pull Current Branch"
+			],
+			[
+				"commit",
+				"Git: Commit"
+			],
+			[
+				"gitgu",
+				"GitGutter: Compare Against Branch"
+			],
+			[
+				"remove ",
+				"Package Control: Remove Package"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"linter",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"auto",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"git commi",
+				"Git: Commit"
+			],
+			[
+				"git",
+				"Git: Commit"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"annota",
+				"Git: Toggle Annotations"
+			],
+			[
+				"status",
+				"Git: Status"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"pckage control : u",
+				"Package Control: Upgrade Package"
+			]
+		],
+		"width": 457.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/naslab/.config/sublime-text-3/Packages/User/Package Control.cache"
+	],
+	"file_history":
+	[
+		"/home/naslab/Barzin/GroundROS/src/not.py",
+		"/home/naslab/Barzin/GroundROS/src/path_tracker_experiment.py",
+		"/home/naslab/Barzin/GroundROS/src/experimental_results/PID_test_analysis_husky.py",
+		"/home/naslab/Barzin/GroundROS/src/talki_test.py",
+		"/home/naslab/Barzin/GroundROS/src/HuskyActuationControl.py",
+		"/home/naslab/Barzin/GroundROS/src/PID.py",
+		"/home/naslab/Barzin/GroundROS/src/HuskeyConnect.py",
+		"/home/naslab/Grive/NASLab/Papers/SSRR2015/SSRR2015_09192015.tex",
+		"/home/naslab/Barzin/talki-talki/Talker.py",
+		"/home/naslab/Barzin/talki-talki/svox_talki.py",
+		"/home/naslab/Barzin/GroundROS/src/shybot.py",
+		"/home/naslab/Barzin/qualisys-rt/send_to_agents.py",
+		"/home/naslab/Barzin/talki-talki/talki_test.py",
+		"/home/naslab/Grive/NASLab/Papers/SSRR2015/SSRR2015_09182015.tex",
+		"/home/naslab/Downloads/ieeeconf/root.tex",
+		"/home/naslab/Desktop/temp.cpp",
+		"/home/naslab/Grive/NASLab/SSRR2015/SSRR2015_09142015.tex",
+		"/home/naslab/Barzin/Husky_password.txt",
+		"/home/naslab/Downloads/SSRR2015/SSRR2015_09142015.tex",
+		"/home/naslab/Barzin/GroundROS/ros.tcl",
+		"/home/naslab/Barzin/GroundROS/src/tests/pathGenerator_test.py",
+		"/home/naslab/Barzin/GroundROS/src/tests/pid_test.py",
+		"/home/naslab/Barzin/GroundROS/src/control.py",
+		"/home/naslab/Barzin/GroundROS/ro.sh",
+		"/home/naslab/Barzin/GroundROS/tests/PID_test_analysis_husky.py",
+		"/home/naslab/Barzin/GroundROS/tests/get_PID_coefs.py",
+		"/home/naslab/Barzin/GroundROS/tests/pathGeneratorTest.py",
+		"/home/naslab/Downloads/Microgrid Journal/microgrid_journal_31092015.tex",
+		"/home/naslab/Barzin/qualisys-rt/qtm.py",
+		"/home/naslab/Barzin/GroundROS/src/connection.py",
+		"/home/naslab/Barzin/qualisys-rt/naslabPositionReciever.o",
+		"/home/naslab/Barzin/GroundROS/hello.sh",
+		"/home/naslab/Barzin/GroundROS/ls-l.txt",
+		"/home/naslab/Barzin/GroundROS/grep-errors.txt",
+		"/home/naslab/Barzin/GroundROS/src/pathGenerator.py",
+		"/home/naslab/Barzin/GroundROS/src/tests/pathGenerator_unittests.py",
+		"/home/naslab/Barzin/GroundROS/src/pid_test.py",
+		"/home/naslab/.config/sublime-text-3/Packages/User/Terminal.sublime-settings",
+		"/home/naslab/.config/sublime-text-3/Packages/Terminal/Terminal.sublime-settings",
+		"/home/naslab/Barzin/GroundROS/src/pathGenerator_unittests.py",
+		"/home/naslab/Barzin/GroundROS/src/pathGenerator (copy).py",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_July_10_NM_4.tex",
+		"/home/naslab/Downloads/SSRR2015/SSRR2015_08282015.tex",
+		"/home/naslab/Downloads/SSRR2015/microgrid_journal.tex",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_08292015.tex",
+		"/home/naslab/Downloads/Microgrid Journal/microgrid_journal_08092015.tex",
+		"/home/naslab/Downloads/Microgrid Journal/microgrid_journal_02392015.tex",
+		"/home/naslab/Downloads/DSCC15/dscc_08032015.tex",
+		"/home/naslab/Barzin/qualisys-rt/Qualisys.h",
+		"/home/naslab/Downloads/DSCC15/rebuttal_dscc.tex",
+		"/home/naslab/Downloads/Microgrid Journal/microgrid_journal_08172015.tex",
+		"/home/naslab/Desktop/rebuttal_dscc.tex",
+		"/home/naslab/Downloads/DSCC15/dscc_07282015.tex",
+		"/home/naslab/Barzin/qualisys-rt/qualisys_reciever.cpp",
+		"/home/naslab/Barzin/qualisys-rt/qualisys_recieve_test.cpp",
+		"/home/naslab/.config/sublime-text-3/Packages/User/LaTeXTools.sublime-settings",
+		"/home/naslab/Downloads/DSCC15/dscc_07272015.tex",
+		"/home/naslab/Downloads/Microgrid Journal/Microgrid_Bibs.bib",
+		"/home/naslab/Barzin/Simulate.m",
+		"/home/naslab/ic model of mobile microgrid.}",
+		"/home/naslab/oemthing",
+		"/home/naslab/test.txt",
+		"/home/naslab/.cache/.fr-n7k6Qn/ostrich-sans-master/readme.markdown",
+		"/tmp/asme2e.tex",
+		"/home/naslab/Downloads/DSCC15/dscc_04192015_NM_BRZN_April19.tex",
+		"/home/naslab/Downloads/DSCC15 (2)/dscc_04192015_NM_BRZN_April19.tex",
+		"/home/naslab/Barzin/InvertedPendulum.m",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_July_8.tex",
+		"/home/naslab/Barzin/qualisys-rt/qualisys_recieve.cpp",
+		"/home/naslab/Downloads/SSRR2015/Microgrid_Bibs.bib",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_July_9_2100.tex",
+		"/home/naslab/Barzin/gennie-the-pooh/frontEnd.m",
+		"/home/naslab/Barzin/gennie-the-pooh/single_working_robot_test.m",
+		"/home/naslab/Barzin/gennie-the-pooh/Genetic.m",
+		"/home/naslab/Downloads/SSRR2015/wayne.tex",
+		"/home/naslab/Barzin/gennie-the-pooh/Chromosome.m",
+		"/home/naslab/Barzin/gennie-the-pooh/Map.m",
+		"/home/naslab/Barzin/gennie-the-pooh/colaborativeOptimizer.m",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_July_9_1800.tex",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_June_26.tex",
+		"/home/naslab/Downloads/ElectricalSection_LATEX (2)/section_electrical.tex",
+		"/home/naslab/Barzin/gennie-the-pooh/map_test.m",
+		"/home/naslab/Barzin/gennie-the-pooh/chromosome_test.m",
+		"/home/naslab/Downloads/SSRR2015/dscc_04192015_NM_BRZN_April19.tex",
+		"/home/naslab/Downloads/IEEEtranBST/README",
+		"/home/naslab/Downloads/ElectricalSection_LATEX (2)/Elec_Main.tex",
+		"/home/naslab/Downloads/SSRR2015/SSRR15_Barzin_June_25.bbl",
+		"/home/naslab/Barzin/gennie-the-pooh/ColaborativeOptimizer.m",
+		"/home/naslab/Downloads/Position.m",
+		"/home/naslab/Downloads/Third-GA-master/work.m",
+		"/home/naslab/Downloads/Third-GA-master/Configuration.m",
+		"/home/naslab/Downloads/Third-GA-master/Map.m",
+		"/home/naslab/Downloads/Third-GA-master/map_image.bmp",
+		"/home/naslab/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/naslab/Downloads/Third-GA-master/README.md",
+		"/home/naslab/Barzin/GroundROS/src/control.log",
+		"/home/naslab/Barzin/imageprocessing/objectTrackingTutorial.cpp",
+		"/home/naslab/Downloads/tennis/tennis.c",
+		"/home/naslab/Desktop/test.html",
+		"/home/naslab/Downloads/tennis/makefile",
+		"/home/naslab/Barzin/people_page_of_naslab_website.html",
+		"/home/naslab/Barzin/naslab_research_page.html",
+		"/home/naslab/Barzin/naslab_website_root.html",
+		"/home/naslab/Downloads/picospeaker-0.7/README",
+		"/home/naslab/Downloads/Robot.m",
+		"/home/naslab/Downloads/Plot.m",
+		"/home/naslab/Downloads/Robot_diff.m",
+		"/home/naslab/Downloads/Robot_P1.m",
+		"/home/naslab/Downloads/IVER_Backseat_controller_log-635647512588106423.txt",
+		"/home/naslab/Downloads/IVER_Backseat_controller_log-635647498187840837.txt",
+		"/home/naslab/Barzin/qualisys-rt/send_to_agents.log",
+		"/home/naslab/Barzin/ugv/mexcpp.cpp",
+		"/home/naslab/Barzin/ugv/arrayProduct.cpp",
+		"/tmp/RobotStates.m",
+		"/home/naslab/Barzin/ugv/temp.cpp",
+		"/home/naslab/Barzin/ugv/obstacleRecognition.cpp",
+		"/home/naslab/Downloads/test.cs",
+		"/home/naslab/Barzin/ugv/UGVNavigation.h",
+		"/home/naslab/Barzin/ugv/UGVNavigation.cpp",
+		"/home/naslab/Downloads/task1.m",
+		"/home/naslab/Downloads/task1",
+		"/home/naslab/Barzin/qualisys-rt/example.log",
+		"/home/naslab/Barzin/GroundROS/src/error_history2.npy",
+		"/home/naslab/.config/sublime-text-3/Packages/User/Package Control.cache/PID_test_analysis_husky.py",
+		"/home/naslab/Barzin/qualisys-rt/log_test.py",
+		"/home/naslab/example.log",
+		"/home/naslab/.config/sublime-text-3/Packages/User/Anaconda.sublime-settings",
+		"/home/naslab/.config/sublime-text-3/Packages/Anaconda/Anaconda.sublime-settings"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 106.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			".",
+			"talker.say",
+			"talker.wait()\n",
+			"{resources/",
+			"in lab",
+			"lab size",
+			"lab-size",
+			"real size",
+			"power electric",
+			"power elect",
+			"the mission planner",
+			"The mission planner",
+			"_local_pos",
+			"_local_pos_sub",
+			"vehicle_local_position",
+			"_local_pos_sub",
+			"vehicle_local_position",
+			"vehicle_local_position\\",
+			"vehicle_local_position",
+			"vehicle_local_position_pub",
+			"vehicle_local_position",
+			"orb_publish",
+			"local_pos",
+			"corr_gps",
+			"accel_bias_corr",
+			"corr_gps",
+			"est_buf",
+			"EST_BUF",
+			"est_buf",
+			"x_est",
+			"return",
+			"EST_BUF",
+			"est_buf",
+			"x_est",
+			"vision_valid",
+			"update_ref",
+			"control_update",
+			"~MulticopterPositionControl",
+			"_task_should_exit",
+			"=",
+			"self.",
+			"  ",
+			"    ",
+			"errors[0][1]",
+			"errors[0][0]",
+			"]) ",
+			"errors[0][0])",
+			"errors[0][0]",
+			"raise",
+			"_p",
+			"engine",
+			"> .01",
+			"> .03",
+			"act_control",
+			"s[0][0]) > .05",
+			"[1]) > .1",
+			"errors[0][",
+			"errors[0][1] > .2",
+			"errors[0][1] > .05",
+			"> .5",
+			"4 * 180 / np.pi",
+			"or",
+			"float('nan')",
+			"save",
+			"pose_msg",
+			"angle_error_wrapped",
+			"limit_2",
+			"pth",
+			"home",
+			"self.actual_pos",
+			"pose_msg",
+			"pose_msg_",
+			"act_control",
+			"self.pose_msg",
+			"sock",
+			"longitudinal_error",
+			"diff_",
+			"angle_error_wrapped",
+			"_pid",
+			"longitudinal_pid",
+			"self.",
+			"limit",
+			"reference_y",
+			"reference_x",
+			"pub_pose",
+			"getPosition",
+			"192.168.0.1",
+			"192",
+			"192.168.0.1",
+			"192.168.0.21",
+			"Connecting to",
+			"pose_msg.",
+			"self.sock.recv",
+			"radial_boundry",
+			"__generateLineWithStepInDirection",
+			"1.5",
+			"x_array",
+			"x_array_1",
+			"cos",
+			"x_array",
+			"x",
+			"X",
+			"x",
+			"self",
+			"pathg",
+			"quadratic",
+			"x_limit",
+			"y_limit",
+			"x_limit",
+			"x_function",
+			"30%",
+			"25%",
+			"150px",
+			"300px",
+			"200px",
+			"center",
+			"left",
+			"50",
+			"35",
+			"style=\"width:70%\"",
+			"banana",
+			"        ",
+			"       ",
+			"      ",
+			"     ",
+			"    ",
+			"   ",
+			"  "
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"  ",
+			" ",
+			"\\t",
+			" ",
+			"Fig. ",
+			" = ",
+			"=",
+			"</br>",
+			"</b>",
+			"\\n\\t"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/pathGenerator.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5254,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2023,
+								2023
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/control.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2751,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/Tracker.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2826,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								31,
+								31
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "ros.tcl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 993,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								632,
+								632
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/TCL/Tcl.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/home/naslab/Barzin/talki-talki/talki_test.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/naslab/Barzin/talki-talki/Talker.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 685,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								397,
+								397
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/home/naslab/Barzin/qualisys-rt/send_to_agents.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5683,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								110,
+								110
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/ActuationControl.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2218,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								433,
+								433
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/shybot.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1617,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								812,
+								812
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 54.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.astyle_error_message":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 115.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 116.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 110.0
+	},
+	"pinned_build_system": "",
+	"project": "husky.sublime-project",
+	"replace":
+	{
+		"height": 72.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"bulk",
+				"~/Barzin/documents-export-2015-02-10/bulkHTMLScraper.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Barzin/naslab_website.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 400.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 400.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

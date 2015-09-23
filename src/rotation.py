@@ -1,6 +1,7 @@
-from numpy import sin, cos
+from numpy import sin, cos, pi
 
 nan_var = float('nan')
+radian_over_degree = pi / 180.0
 
 
 def rotate2DimFrame(initial_x, initial_y, theta):
@@ -12,3 +13,15 @@ def rotate2DimFrame(initial_x, initial_y, theta):
 def rotate3DimFrame(initial_x=nan_var, initial_y=nan_var, initial_z=nan_var, roll=nan_var, pitch=nan_var, yaw=nan_var):
     raise NotImplementedError(
         'Function is not defined and developed yet. Contact Developer.')
+
+
+def wrapAnglePi(theta):
+    return (theta + pi) % (2 * pi) - pi
+
+
+def wrapAngle2Pi(theta):
+    return (theta + pi) % (2 * pi) - pi
+
+
+def degree_to_radian(theta):
+    return theta * radian_over_degree
