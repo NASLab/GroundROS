@@ -1,5 +1,4 @@
 TODEV:
 go to static target(path tracker)
 face direction(path tracker)
-angle wrapper(rotation)
 error minimizing(path tracker)
