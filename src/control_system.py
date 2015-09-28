@@ -17,7 +17,7 @@ class Proportional(object):
         self.kp = nan_var
 
     def controllerOutput(self, error):
-        return kp * error
+        return self.kp * error
 
     def setGain(self, kp):
         self.kp = kp

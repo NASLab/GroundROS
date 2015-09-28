@@ -12,8 +12,8 @@ for file in glob.glob("*.npy"):
     error_lat = data[:, 1]
     ref_x = data[:, 2]
     ref_y = data[:, 3]
-    pos_x = data[:, 4]/1000
-    pos_y = data[:, 5]/1000
+    pos_x = data[:, 4]
+    pos_y = data[:, 5]
     pos_theta = data[:, 6]
     time = data[:, 7] - data[0, 7]
 
@@ -24,7 +24,7 @@ for file in glob.glob("*.npy"):
     ax0 = f0.add_subplot(111)
     ax0.plot(ref_x, ref_y, 'ro', label='Reference')
     ax0.plot(pos_x[0], pos_y[0], 'bo')
-    ax0.plot(pos_x, pos_y, 'b',label='Robot trajectory')
+    ax0.plot(pos_x, pos_y, 'bo',label='Robot trajectory')
     ax0.legend()
     ax0.axis('equal')
 

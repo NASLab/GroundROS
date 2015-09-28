@@ -7,11 +7,13 @@ import sys
 
 nan_var = float('nan')
 
+
 class PathError(Exception):
+
     def __init__(self, message, errors=-1):
 
-    # Call the base class constructor with the parameters it needs
-    super(ControlSystemError, self).__init__(message)
+        # Call the base class constructor with the parameters it needs
+        super(PathError, self).__init__(message)
 
 
 class PathGenerator():
@@ -19,7 +21,7 @@ class PathGenerator():
     def __init__(self, path_type='circle', speed=.1):
         self.time = time()
         self.travel_distance = 0
-        self.__path_type = path_type
+        self.path_type = path_type
         self.speed = speed
         self.x_array = []
         self.y_array = []
@@ -53,8 +55,8 @@ class PathGenerator():
     def getPosition(self):
         time_now = time()
         self.travel_distance = self.travel_distance + self.speed * (time_now - self.time)
-        if self.travel_distance>self.total_distance:
-            raise PathError('Reached end of path')
+        if self.travel_distance > self.total_distance:
+            # raise PathError('Reached end of path')
             return nan_var
         else:
             self.time = time()
@@ -100,13 +102,13 @@ class PathGenerator():
         self.x_function = interp1d(self.distance_array, self.x_array)
         self.y_function = interp1d(self.distance_array, self.y_array)
 
-    def __generateLine(self, slope=np.pi/6):
+    def __generateLine(self, slope=np.pi / 6):
         self.x_array = np.cos(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
         self.y_array = np.sin(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
         self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
         self.total_distance = self.radial_boundry * 2
-        self.x_function = lambda x: x*np.cos(slope) - np.cos(slope)
-        self.y_function = lambda x: x*np.sin(slope) - np.sin(slope)
+        self.x_function = lambda x: x * np.cos(slope) - np.cos(slope)
+        self.y_function = lambda x: x * np.sin(slope) - np.sin(slope)
 
     def __generateBrokenLine(self, slope_1=0, slope_2=np.pi / 6):
         x_array_1 = np.cos(slope_1) * np.linspace(-self.radial_boundry, 0, num=51)

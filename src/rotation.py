@@ -20,7 +20,7 @@ def wrapAnglePi(theta):
 
 
 def wrapAngle2Pi(theta):
-    return (theta + pi) % (2 * pi) - pi
+    return (theta + pi) % (2 * pi)
 
 
 def degreeToRadian(theta):
