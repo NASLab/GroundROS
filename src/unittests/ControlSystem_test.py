@@ -2,19 +2,19 @@ from sys import path
 from math import isnan
 import pytest
 path.append('..')
-import ControlSystem
+import control_system
 
 acceptable_error = .001
 
 
 @pytest.fixture
 def ctrl_sys_no_gain():
-    return ControlSystem.ControlSystem()
+    return control_system.ControlSystem()
 
 
 @pytest.fixture
 def ctrl_sys_gain():
-    obj = ControlSystem.ControlSystem()
+    obj = control_system.ControlSystem()
     obj.setGain(1, 0, 0)
     return obj
 
