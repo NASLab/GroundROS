@@ -26,12 +26,12 @@ class GapFinding(object):
             y[i] = distance[i] * sin(angle[i])
             i += 1
 
-        self.first_obstacle_end = self.findFirstGap(x, y)
+        self.first_obstacle_end = self.__findFirstGap(x, y)
         print 'first obstacle end:', self.first_obstacle_end
 
         return x, y
 
-    def findFirstGap(self, x, y):
+    def __findFirstGap(self, x, y):
         i = 1
         first_obstacle_end = -1
 
@@ -68,17 +68,18 @@ class GapFinding(object):
 
         number_of_obstacles = 0
         obstacle_end_index = self.first_obstacle_end
-        obstacle_limits = [None]
-
+        self.obstacle_limits = []
         obstacle_start_index = obstacle_end_index + 1
+        obstacle_end_index = None
 
-        while not obstacle_limits[-1] == (self.first_obstacle_end % self.number_of_readings):
+        while not obstacle_end_index == (self.first_obstacle_end % self.number_of_readings):
             print 'explorriing new obstacle with start index:', obstacle_start_index
             number_of_obstacles += 1
             if number_of_obstacles > 4:
                 print 'number of obstacles got more than 2'
                 break
-            obstacle_limits.append(obstacle_start_index)
+            self.obstacle_limits.append(obstacle_start_index)
+
             obstacle_vertex_index = obstacle_start_index
             obstacle_end_index = obstacle_start_index
             found_obstacle_end = False
@@ -107,13 +108,20 @@ class GapFinding(object):
                     print 'DIDN"T GET OUT OF THIS LOOP'
                     break
             print 'obstacle end is:', obstacle_end_index
-            obstacle_limits.append(obstacle_end_index)
-        return obstacle_limits[1:]
+            self.obstacle_limits.append(obstacle_end_index)
+        # self.obstacle_limits[1:]
 
-    def showReadings(self,distances,angles):
+    def showReadings(self, distances, angles):
         pass
 
-    def selectSubgoal(self):
+    def defineSubgoals(self,distances,angles):
+        pass
+
+    def selectSubgoal(self, distances, angles, target_distnce, target_theta):
+        x, y = self.polarToCartesian(distances, angles)
+        self.findObstacleLimits(x, y)
+        for i in range(self.obstacle_limits / 2):
+            diff = wrapTo180()
         pass
 
     def isSafe(x_gap, y_gap, safe_radius, safe_gap):
