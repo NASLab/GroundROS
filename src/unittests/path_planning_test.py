@@ -14,10 +14,62 @@ def gap_finder():
 
 
 def test_polarToCartesian(gap_finder):
-    x, y = gap_finder.polarToCartesian([1,1], [0,pi/2])
+    x, y = gap_finder.polarToCartesian([1, 1], [0, pi / 2])
     assert x[0] == 1
     assert y[0] == 0
 
+
+def test_filterReadings(gap_finder):
+    readings = 6
+    distances = [20 for i in range(readings)]
+    distances[3] = 3
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+
+
+def test_findObstacleLimits1(gap_finder):
+    print 'Std Outputs:'
+    readings = 6
+    distances = [20 for i in range(readings)]
+    distances[1] = 9
+    distances[2] = 9
+    distances[3] = 3
+    distances[4] = 14
+    # distances[5] = 9
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:',distances,angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    print limits
+
+def test_findObstacleLimits2(gap_finder):
+    print 'Std Outputs:'
+    readings = 6
+    distances = [20 for i in range(readings)]
+
+    distances[3] = 2
+    distances[4] = 2
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:',distances,angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    print limits
+
+def test_findObstacleLimits3(gap_finder):
+    print 'Std Outputs:'
+    readings = 6
+    distances = [20 for i in range(readings)]
+
+    distances[3] = 3
+    # distances[4] = 3
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:',distances,angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    print limits
 # def test_2D_angle():
 #     for i in range(14):
 #         theta = i * pi / 6
