@@ -100,7 +100,6 @@ class GapFinding(object):
                         print 'found new vertex', obstacle_vertex_index
                         break
                     else:
-                        print 'continue scanning'
                         scanner = (scanner - 1) % self.number_of_readings
 
                 control_val += 1
