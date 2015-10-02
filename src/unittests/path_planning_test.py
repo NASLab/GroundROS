@@ -39,9 +39,10 @@ def test_findObstacleLimits1(gap_finder):
     angles = [10 * i * pi / 180 for i in range(readings)]
     distances, angles = gap_finder.filterReadings(distances, angles)
     x, y = gap_finder.polarToCartesian(distances, angles)
-    print 'Distances and angles:',distances,angles
+    print 'Distances and angles:', distances, angles
     limits = gap_finder.findObstacleLimits(x, y)
-    print limits
+    assert limits == [2, 2, 3, 3, 0, 1]
+
 
 def test_findObstacleLimits2(gap_finder):
     print 'Std Outputs:'
@@ -53,9 +54,10 @@ def test_findObstacleLimits2(gap_finder):
     angles = [10 * i * pi / 180 for i in range(readings)]
     distances, angles = gap_finder.filterReadings(distances, angles)
     x, y = gap_finder.polarToCartesian(distances, angles)
-    print 'Distances and angles:',distances,angles
+    print 'Distances and angles:', distances, angles
     limits = gap_finder.findObstacleLimits(x, y)
-    print limits
+    assert limits == [0, 1]
+
 
 def test_findObstacleLimits3(gap_finder):
     print 'Std Outputs:'
@@ -67,9 +69,64 @@ def test_findObstacleLimits3(gap_finder):
     angles = [10 * i * pi / 180 for i in range(readings)]
     distances, angles = gap_finder.filterReadings(distances, angles)
     x, y = gap_finder.polarToCartesian(distances, angles)
-    print 'Distances and angles:',distances,angles
+    print 'Distances and angles:', distances, angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    assert limits == [0, 0]
+
+
+def test_findObstacleLimits4(gap_finder):
+    print 'Std Outputs:'
+    readings = 6
+    distances = [20 for i in range(readings)]
+    # distances[1] = 9
+    distances[2] = 9
+    distances[3] = 9
+    distances[4] = 9
+    # distances[5] = 9
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:', distances, angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    assert limits == [0, 2]
+
+
+def test_findObstacleLimits5(gap_finder):
+    print 'Std Outputs:'
+    readings = 6
+    distances = [20 for i in range(readings)]
+    distances[1] = 9
+    distances[2] = 9
+    distances[3] = 3
+    distances[4] = 14
+    distances[5] = 9
+    angles = [10 * i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:', distances, angles
+    limits = gap_finder.findObstacleLimits(x, y)
+    assert limits == [2, 2, 3, 3, 4, 4, 0, 1]
+
+def test_findObstacleLimits6(gap_finder):
+    print 'Std Outputs:'
+    readings = 100
+    distances = [20 for i in range(readings)]
+    for i in range (20,30):
+        distances[i] = 9
+
+    distances[1] = 9
+    distances[2] = 9
+    distances[3] = 3
+    distances[4] = 14
+    distances[5] = 9
+    angles = [ i * pi / 180 for i in range(readings)]
+    distances, angles = gap_finder.filterReadings(distances, angles)
+    x, y = gap_finder.polarToCartesian(distances, angles)
+    print 'Distances and angles:', distances, angles
     limits = gap_finder.findObstacleLimits(x, y)
     print limits
+
+
 # def test_2D_angle():
 #     for i in range(14):
 #         theta = i * pi / 6

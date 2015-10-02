@@ -27,7 +27,7 @@ class GapFinding(object):
             i += 1
 
         self.first_obstacle_end = self.findFirstGap(x, y)
-        print self.first_obstacle_end
+        print 'first obstacle end:', self.first_obstacle_end
 
         return x, y
 
@@ -57,60 +57,65 @@ class GapFinding(object):
         return distances, angles
 
     def findObstacleLimits(self, x, y):
-        print 'input length:',len(x)
+        print 'number of readings:', len(x)
 
         def isSafe(index_1, index_2):
             gap_x = x[index_1] - x[index_2]
             gap_y = y[index_1] - y[index_2]
             gap = gap_x**2 + gap_y**2
+            print 'the gap is', gap
             return gap > self.safe_gap
 
         number_of_obstacles = 0
         obstacle_end_index = self.first_obstacle_end
-        print 'first obstacle end:',self.first_obstacle_end
         obstacle_limits = [None]
+
         obstacle_start_index = obstacle_end_index + 1
+
         while not obstacle_limits[-1] == (self.first_obstacle_end % self.number_of_readings):
-            print 'in top while'
+            print 'explorriing new obstacle with start index:', obstacle_start_index
             number_of_obstacles += 1
             if number_of_obstacles > 4:
                 print 'number of obstacles got more than 2'
                 break
             obstacle_limits.append(obstacle_start_index)
             obstacle_vertex_index = obstacle_start_index
-            print 'obstacle_start_index',obstacle_start_index
             obstacle_end_index = obstacle_start_index
             found_obstacle_end = False
 
+            scanner = obstacle_vertex_index
             control_val = 0
             while not found_obstacle_end:
-                print 'in the middle while'
-                temp2 = (obstacle_vertex_index) % self.number_of_readings
-                for index in range(self.number_of_readings + self.first_obstacle_end, obstacle_vertex_index, -1):
-                    end_finder = (index) % self.number_of_readings
-                    print 'in the for loop, end_finder:',end_finder
-                    if not isSafe(end_finder, temp2):
-                        # obstacle_limits.append(end_finder)
-                        print 'found new vertex',obstacle_vertex_index
-                        obstacle_start_index = (obstacle_vertex_index + 1)%self.number_of_readings
-                        # found_obstacle_end = True
-                        # obstacle_end_index = end_finder
+                scanner = (self.number_of_readings + self.first_obstacle_end) % self.number_of_readings
+                while True:
+                    print 'Evaluating indexes:', obstacle_vertex_index, scanner
+                    if scanner == obstacle_vertex_index:
+                        obstacle_end_index = scanner
+                        found_obstacle_end = True
+                        obstacle_start_index = (obstacle_vertex_index + 1) % self.number_of_readings
+                        # break
                         break
-                obstacle_vertex_index = (obstacle_vertex_index+1)%self.number_of_readings
-                if obstacle_limits[-1] == temp2:
-                    print 'found end of obstacle:', temp2
-                    found_obstacle_end = True
-                    obstacle_end_index = temp2
-                    obstacle_start_index = (temp2 + 1)%self.number_of_readings
-                    break
-                control_val+=1
-                if control_val>10:
+                    if not isSafe(scanner, obstacle_vertex_index):
+                        obstacle_vertex_index = (obstacle_vertex_index + 1) % self.number_of_readings
+                        print 'found new vertex', obstacle_vertex_index
+                        break
+                    else:
+                        print 'continue scanning'
+                        scanner = (scanner - 1) % self.number_of_readings
+
+                control_val += 1
+                if control_val > 100:
                     print 'DIDN"T GET OUT OF THIS LOOP'
                     break
+            print 'obstacle end is:', obstacle_end_index
             obstacle_limits.append(obstacle_end_index)
-            print 'obstacle_end_index', obstacle_end_index
-        # obstacle_limits.append(self.first_obstacle_end)
         return obstacle_limits[1:]
+
+    def showReadings(self,distances,angles):
+        pass
+
+    def selectSubgoal(self):
+        pass
 
     def isSafe(x_gap, y_gap, safe_radius, safe_gap):
         if x_gap > safe_radius or y_gap > safe_radius:
