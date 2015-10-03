@@ -41,7 +41,7 @@ def test_findObstacleLimits1(gap_finder):
     x, y = gap_finder.polarToCartesian(distances, angles)
     print 'Distances and angles:', distances, angles
     gap_finder.findObstacleLimits(x, y)
-    assert gap_finder.obstacle_limits == [2, 2, 3, 3, 0, 1]
+    assert gap_finder.obstacle_limits == [[2, 2],[ 3, 3], [0, 1]]
 
 
 def test_findObstacleLimits2(gap_finder):
@@ -56,7 +56,7 @@ def test_findObstacleLimits2(gap_finder):
     x, y = gap_finder.polarToCartesian(distances, angles)
     print 'Distances and angles:', distances, angles
     gap_finder.findObstacleLimits(x, y)
-    assert gap_finder.obstacle_limits == [0, 1]
+    assert gap_finder.obstacle_limits == [[0, 1]]
 
 
 def test_findObstacleLimits3(gap_finder):
@@ -71,7 +71,7 @@ def test_findObstacleLimits3(gap_finder):
     x, y = gap_finder.polarToCartesian(distances, angles)
     print 'Distances and angles:', distances, angles
     gap_finder.findObstacleLimits(x, y)
-    assert gap_finder.obstacle_limits == [0, 0]
+    assert gap_finder.obstacle_limits == [[0, 0]]
 
 
 def test_findObstacleLimits4(gap_finder):
@@ -88,7 +88,7 @@ def test_findObstacleLimits4(gap_finder):
     x, y = gap_finder.polarToCartesian(distances, angles)
     print 'Distances and angles:', distances, angles
     gap_finder.findObstacleLimits(x, y)
-    assert gap_finder.obstacle_limits == [0, 2]
+    assert gap_finder.obstacle_limits == [[0, 2]]
 
 
 def test_findObstacleLimits5(gap_finder):
@@ -105,7 +105,7 @@ def test_findObstacleLimits5(gap_finder):
     x, y = gap_finder.polarToCartesian(distances, angles)
     print 'Distances and angles:', distances, angles
     gap_finder.findObstacleLimits(x, y)
-    assert gap_finder.obstacle_limits == [2, 2, 3, 3, 4, 4, 0, 1]
+    assert gap_finder.obstacle_limits == [[2, 2], [3, 3], [4, 4], [0, 1]]
 
 
 def test_findObstacleLimits6(gap_finder):

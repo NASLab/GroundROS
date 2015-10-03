@@ -1,4 +1,4 @@
-from numpy import cos, sin, pi
+from numpy import cos, sin, pi, arcsin
 
 
 class GapFinding(object):
@@ -78,7 +78,7 @@ class GapFinding(object):
             if number_of_obstacles > 4:
                 print 'number of obstacles got more than 2'
                 break
-            self.obstacle_limits.append(obstacle_start_index)
+            self.obstacle_limits.append([obstacle_start_index])
 
             obstacle_vertex_index = obstacle_start_index
             obstacle_end_index = obstacle_start_index
@@ -108,15 +108,21 @@ class GapFinding(object):
                     print 'DIDN"T GET OUT OF THIS LOOP'
                     break
             print 'obstacle end is:', obstacle_end_index
-            self.obstacle_limits.append(obstacle_end_index)
+            self.obstacle_limits[-1].append(obstacle_end_index)
         # self.obstacle_limits[1:]
 
     def showReadings(self, distances, angles):
         pass
 
-    def defineSubgoals(self,distances,angles):
-        pass
-
+    def defineSubgoals(self, distances, angles):
+        number_of_obstacles = len(self.obstacle_limits) / 2
+        subgoals_distance = subgoals_angle = [[None,None] for i in range(number_of_obstacles)]
+        for i in range(number_of_obstacles):
+            obstacle_vertices = range(self.obstacle_limits[2*i],self.obstacle_limits[2*i+1])
+            for obstacle_vertex in obstacle_vertices:
+                subgoal_clockwise = angles[obstacle_vertex] - arcsin(self.safe_radius/distances[obstacle_vertex])
+                subgoal_counter_clockwise = angles[obstacle_vertex] + arcsin(self.safe_radius/distances[obstacle_vertex])
+                # subgoals_angle(i) = min([subgoals_angle(i),subgoal])
     def selectSubgoal(self, distances, angles, target_distnce, target_theta):
         x, y = self.polarToCartesian(distances, angles)
         self.findObstacleLimits(x, y)
