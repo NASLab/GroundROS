@@ -1,4 +1,5 @@
-from numpy import cos, sin, pi, arcsin
+from numpy import cos, sin, pi, arcsin,sqrt
+from time import time
 nan = float('nan')
 
 
@@ -62,10 +63,11 @@ class GapFinding(object):
         return distances, angles
 
     def findObstacleLimits(self, x, y):
-        print 'mmmmmmmmmmmmmmmmmmmmmmmmmmm'
+        start_time = time()
+        # print 'mmmmmmmmmmmmmmmmmmmmmmmmmmm'
         # print len(x)
         self.first_obstacle_end = self.__findFirstGap(x, y)
-        print self.first_obstacle_end
+        # print self.first_obstacle_end
         # print 'number of readings_polar:', len(x)
 
         def isSafe(index_1, index_2):
@@ -119,6 +121,7 @@ class GapFinding(object):
             # print 'obstacle end is:', obstacle_end_index
             self.obstacle_limits[-1].append(obstacle_end_index)
         # self.obstacle_limits[1:]
+        print 'the algorithm took:', time() - start_time
 
     def showReadings(self, distances, angles):
         pass
@@ -199,24 +202,53 @@ class SimpleGapFinder(object):
         return distances, angles
 
     def findGaps(self):
-        print self.readings_polar
-        possible_travel = [0.0 for i in range(len(self.readings_polar))]
+        start_time = time()
+        # print self.readings_polar
+        possible_travel = [0 for i in range(len(self.readings_polar))]
         for i in range(len(self.readings_polar)):
-            possible_travel[i] = self.readings_polar[i][0]
+            possible_travel[i] = self.readings_polar[i][0] - self.safe_radius
             for j in range(i - 1, -1, -1):
                 angular_difference = self.readings_polar[i][1] - self.readings_polar[j][1]
-                distance = self.readings_polar[i][0] - self.readings_polar[j][0]
-                if  angular_difference > pi / 2:
-                    print 'breakings'
+                if angular_difference > pi / 2:
                     break
-                if abs(distance)>self.safe_radius*2:
+                if self.readings_polar[j][0] > self.readings_polar[i][0]:
                     continue
-                elif 
+                elif self.readings_polar[j][0] * sin(angular_difference) < self.safe_radius:
+
+                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference) - self.safe_radius)
 
             for j in range(i + 1, self.number_of_readings):
-                if self.readings_polar[j][1]-self.readings_polar[j][1] > pi/2:
-                    print 'breaking'
+                angular_difference = self.readings_polar[j][1] - self.readings_polar[i][1]
+                if angular_difference > pi / 2:
                     break
-                if abs(self.readings_polar[i][0] - self.readings_polar[j][0])>self.safe_radius*2:
+                if self.readings_polar[j][0] > self.readings_polar[i][0]:
                     continue
+                elif self.readings_polar[j][0] * sin(angular_difference) < self.safe_radius:
 
+                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference) - self.safe_radius)
+        print 'the algorithm took:', time() - start_time
+        return possible_travel
+
+    def findSubgoals(self, possible_travel):
+        subgoals = []
+        for i in range(1, len(possible_travel)):
+            if possible_travel[i] - possible_travel[i - 1] > self.safe_radius * 2:
+                subgoals.append(i)
+            elif possible_travel[i - 1] - possible_travel[i] > self.safe_radius * 2:
+                subgoals.append(i - 1)
+
+        return subgoals
+
+    def selectSubgoal(self, subgoals, distance, theta):
+        best_angle = []
+        best_distance = [distance**2]
+        for subgoal in subgoals:
+            distance_to_target_sq = distance**2 + self.readings_polar[subgoal][0]**2 - 2 * distance * \
+                self.readings_polar[subgoal][0] * cos(self.readings_polar[subgoal][1] - theta)
+            print 'dist:',distance_to_target_sq,best_distance
+            if distance_to_target_sq < best_distance:
+                print 'here'
+                best_distance = distance_to_target_sq
+                best_angle = self.readings_polar[subgoal][1]
+
+        return best_angle, sqrt(best_distance)

@@ -17,14 +17,15 @@ def simple_lidar():
 
 @pytest.fixture
 def actual_lidar():
-    finder = GapFinding(.4)
-    finder.setDistanceRange(4.0)
+    finder = GapFinding(.5)
+    finder.setDistanceRange(20)
     return finder
+
 
 @pytest.fixture
 def simple_gap_finder():
-    finder = SimpleGapFinder(.4)
-    finder.setDistanceRange(4.0)
+    finder = SimpleGapFinder(.5)
+    finder.setDistanceRange(20)
     return finder
 # def test_polarToCartesian(simple_lidar):
 #     x, y = simple_lidar.polarToCartesian([1, 1], [0, pi / 2])
@@ -145,7 +146,7 @@ def test_defineSubgoals(simple_lidar):
     distances, angles = simple_lidar.filterReadings(distances, angles)
     x, y = simple_lidar.polarToCartesian()
     simple_lidar.findObstacleLimits(x, y)
-    print simple_lidar.defineSubgoals(distances, angles)
+    # print simple_lidar.defineSubgoals(distances, angles)
 
 
 def ntest_lidarSamples(actual_lidar):
@@ -177,13 +178,119 @@ def ntest_lidarSamples(actual_lidar):
             # print actual_lidar.obstacle_limits,x1, x2
             # xdata =
             # print xdata
-            ax0.plot([x1, x2], [y1, y2],'b', linewidth=3)
+            ax0.plot([x1, x2], [y1, y2], 'b', linewidth=3)
         ax0.axis('equal')
         plt.draw()
         plt.pause(.1)
         raw_input("<Hit Enter To Close>")
         plt.close(f0)
 
+
 def test_findGaps(simple_gap_finder):
-    simple_gap_finder.filterReadings([1,1],[.17,.34])
-    simple_gap_finder.findGaps()
+    simple_gap_finder.filterReadings([1, 1], [.17, .34])
+    travel = simple_gap_finder.findGaps()
+    print travel
+
+
+def ntest_findGaps_actual_data(simple_gap_finder):
+    for file in glob.glob("*.npy"):
+        # print test
+        data = load(file)
+        print file
+        distances = data
+        # distances[:190]=[30]*190
+        # distances[200:]=[30]*341
+        angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
+        simple_gap_finder.filterReadings(distances, angles)
+        x, y = simple_gap_finder.polarToCartesian()
+        # simple_gap_finder.findObstacleLimits(x, y)
+        travel = simple_gap_finder.findGaps()
+        # print distances,travel
+        # print simple_gap_finder.readings_polar
+
+        f0 = plt.figure()
+        ax0 = f0.add_subplot(111)
+        ax0.plot(x, y, 'r.', markersize=15)
+        ax0.plot(0, 0, 'ko', markersize=10)
+        for i in range(len(travel)):
+            x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
+            y[i] = travel[i] * sin(simple_gap_finder.readings_polar[i][1])
+
+        ax0.plot(x, y, 'b')
+        ax0.axis('equal')
+        plt.draw()
+        plt.pause(.1)
+        raw_input("<Hit Enter To Close>")
+        plt.close(f0)
+
+
+def ntest_findSubgoals_actual_data(simple_gap_finder):
+    for file in glob.glob("*.npy"):
+        # print test
+        data = load(file)
+        print file
+        distances = data
+        # distances[:190]=[30]*190
+        # distances[200:]=[30]*341
+        angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
+        simple_gap_finder.filterReadings(distances, angles)
+        x, y = simple_gap_finder.polarToCartesian()
+        # simple_gap_finder.findObstacleLimits(x, y)
+        travel = simple_gap_finder.findGaps()
+        subgoals = simple_gap_finder.findSubgoals(travel)
+        # print distances,travel
+        # print simple_gap_finder.readings_polar
+
+        f0 = plt.figure()
+        ax0 = f0.add_subplot(111)
+        ax0.plot(x, y, 'r.', markersize=15)
+        ax0.plot(0, 0, 'ko', markersize=10)
+        for i in range(len(travel)):
+            x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
+            y[i] = travel[i] * sin(simple_gap_finder.readings_polar[i][1])
+            if i in subgoals:
+                ax0.plot(x[i], y[i], 'mo', markersize=15)
+        ax0.plot(x, y, 'b.')
+        ax0.axis('equal')
+        plt.draw()
+        plt.pause(.1)
+        raw_input("<Hit Enter To Close>")
+        plt.close(f0)
+
+def test_findSubgoals_actual_data(simple_gap_finder):
+    for file in glob.glob("*.npy")[1:4]:
+        # print test
+        data = load(file)
+        print file
+        distances = data
+        # distances[:190]=[30]*190
+        # distances[200:]=[30]*341
+        angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
+        simple_gap_finder.filterReadings(distances, angles)
+        x, y = simple_gap_finder.polarToCartesian()
+        # simple_gap_finder.findObstacleLimits(x, y)
+        travel = simple_gap_finder.findGaps()
+        subgoals = simple_gap_finder.findSubgoals(travel)
+        subgoal_angle,subgoal_distance = simple_gap_finder.selectSubgoal(subgoals,4,2)
+        print subgoals,subgoal_angle,subgoal_distance
+        # print distances,travel
+        # print simple_gap_finder.readings_polar
+
+        f0 = plt.figure()
+        ax0 = f0.add_subplot(111)
+        ax0.plot(x, y, 'r.', markersize=15)
+        ax0.plot(0, 0, 'ko', markersize=10)
+        for i in range(len(travel)):
+            x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
+            y[i] = travel[i] * sin(simple_gap_finder.readings_polar[i][1])
+            if i in subgoals:
+                ax0.plot(x[i], y[i], 'mo', markersize=15)
+
+        ax0.plot(subgoal_distance*cos(subgoal_angle),subgoal_distance*sin(subgoal_angle),'go',markersize=20)
+        ax0.plot(x, y, 'b.')
+        ax0.axis('equal')
+        plt.draw()
+        plt.pause(.1)
+        raw_input("<Hit Enter To Close>")
+        plt.close(f0)
+
