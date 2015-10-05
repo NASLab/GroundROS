@@ -257,40 +257,49 @@ def ntest_findSubgoals_actual_data(simple_gap_finder):
         raw_input("<Hit Enter To Close>")
         plt.close(f0)
 
+
 def test_findSubgoals_actual_data(simple_gap_finder):
-    for file in glob.glob("*.npy")[1:4]:
+    target_distance = 4
+    target_angle = pi / 4
+    start = 160
+    end = 225
+    for file in [glob.glob("*.npy")[0]]:
         # print test
         data = load(file)
         print file
         distances = data
-        # distances[:190]=[30]*190
-        # distances[200:]=[30]*341
+        # distances[:100]=[30]*100
+        # distances[250:]=[30]*291
         angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
+        distances = distances[start:end]
+        angles = angles[start:end]
         simple_gap_finder.filterReadings(distances, angles)
         x, y = simple_gap_finder.polarToCartesian()
         # simple_gap_finder.findObstacleLimits(x, y)
         travel = simple_gap_finder.findGaps()
         subgoals = simple_gap_finder.findSubgoals(travel)
-        subgoal_angle,subgoal_distance = simple_gap_finder.selectSubgoal(subgoals,4,2)
-        print subgoals,subgoal_angle,subgoal_distance
+        best_subgoal = simple_gap_finder.selectSubgoal(subgoals, target_distance, target_angle)
+        # print 'travel:',travel
         # print distances,travel
         # print simple_gap_finder.readings_polar
 
         f0 = plt.figure()
         ax0 = f0.add_subplot(111)
-        ax0.plot(x, y, 'r.', markersize=15)
-        ax0.plot(0, 0, 'ko', markersize=10)
+        ax0.plot(x, y, 'r')
+        ax0.plot(0, 0, 'ko', markersize=5)
         for i in range(len(travel)):
             x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
             y[i] = travel[i] * sin(simple_gap_finder.readings_polar[i][1])
             if i in subgoals:
-                ax0.plot(x[i], y[i], 'mo', markersize=15)
+                ax0.plot(x[i], y[i], 'mo', markersize=10)
+                # print travel[i]
+            ax0.plot([0,x[i]],[0,y[i]], 'b')
 
-        ax0.plot(subgoal_distance*cos(subgoal_angle),subgoal_distance*sin(subgoal_angle),'go',markersize=20)
-        ax0.plot(x, y, 'b.')
+        ax0.plot(travel[best_subgoal] * cos(simple_gap_finder.readings_polar[best_subgoal][1]),
+                 travel[best_subgoal] * sin(simple_gap_finder.readings_polar[best_subgoal][1]), 'go', markersize=20)
+        ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20,linewidth = 10)
         ax0.axis('equal')
         plt.draw()
         plt.pause(.1)
         raw_input("<Hit Enter To Close>")
         plt.close(f0)
-

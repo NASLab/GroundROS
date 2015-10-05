@@ -186,14 +186,15 @@ class SimpleGapFinder(object):
         number_of_all_readings = len(distances)
         inner_bound = self.safe_radius * .7
         for i in range(number_of_all_readings):
-            if distances[i] > .95 * self.distance_range or distances[i] < inner_bound:
-                distances[i] = -1
-                # angles[i] = []
-            # else:
-                # print 'found one'
+            print distances[i],angles[i]
+            if distances[i] < inner_bound and distances[i]!=0.0:
+                distances[i] =self.distance_range
+            elif distances[i]==0.0:
+                distances[i] = self.distance_range
 
         # print distances
-        self.readings_polar = [[distances[i], angles[i]] for i in range(number_of_all_readings) if distances[i] != -1]
+        self.readings_polar = [[distances[i], angles[i]] for i in range(number_of_all_readings)]# if distances[i] != -1]
+        # print self.readings_polar
         # print len(self.readings_polar),self.readings_polar
         self.number_of_readings = len(self.readings_polar)
         # distances = [distance for distance in distances if distance != None]
@@ -206,7 +207,7 @@ class SimpleGapFinder(object):
         # print self.readings_polar
         possible_travel = [0 for i in range(len(self.readings_polar))]
         for i in range(len(self.readings_polar)):
-            possible_travel[i] = self.readings_polar[i][0] - self.safe_radius
+            possible_travel[i] = (self.readings_polar[i][0] - self.safe_radius)
             for j in range(i - 1, -1, -1):
                 angular_difference = self.readings_polar[i][1] - self.readings_polar[j][1]
                 if angular_difference > pi / 2:
@@ -215,9 +216,9 @@ class SimpleGapFinder(object):
                     continue
                 elif self.readings_polar[j][0] * sin(angular_difference) < self.safe_radius:
 
-                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference) - self.safe_radius)
+                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference)+self.readings_polar[j][0] * sin(angular_difference) - self.safe_radius)
 
-            for j in range(i + 1, self.number_of_readings):
+            for j in range(i, self.number_of_readings):
                 angular_difference = self.readings_polar[j][1] - self.readings_polar[i][1]
                 if angular_difference > pi / 2:
                     break
@@ -225,12 +226,12 @@ class SimpleGapFinder(object):
                     continue
                 elif self.readings_polar[j][0] * sin(angular_difference) < self.safe_radius:
 
-                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference) - self.safe_radius)
+                    possible_travel[i] = min(possible_travel[i], self.readings_polar[j][0] * cos(angular_difference)+self.readings_polar[j][0] * sin(angular_difference) - self.safe_radius)
         print 'the algorithm took:', time() - start_time
         return possible_travel
 
     def findSubgoals(self, possible_travel):
-        subgoals = []
+        subgoals = [0,len(possible_travel)-1]
         for i in range(1, len(possible_travel)):
             if possible_travel[i] - possible_travel[i - 1] > self.safe_radius * 2:
                 subgoals.append(i)
@@ -240,15 +241,17 @@ class SimpleGapFinder(object):
         return subgoals
 
     def selectSubgoal(self, subgoals, distance, theta):
+        best_subgoal = 0
         best_angle = []
-        best_distance = [distance**2]
+        best_distance = distance**2
         for subgoal in subgoals:
             distance_to_target_sq = distance**2 + self.readings_polar[subgoal][0]**2 - 2 * distance * \
                 self.readings_polar[subgoal][0] * cos(self.readings_polar[subgoal][1] - theta)
             print 'dist:',distance_to_target_sq,best_distance
             if distance_to_target_sq < best_distance:
-                print 'here'
+                print 'selected subgoal:',subgoal
+                best_subgoal = subgoal
                 best_distance = distance_to_target_sq
                 best_angle = self.readings_polar[subgoal][1]
-
-        return best_angle, sqrt(best_distance)
+        print best_subgoal
+        return best_subgoal
