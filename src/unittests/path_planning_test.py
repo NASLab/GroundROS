@@ -6,6 +6,7 @@ import glob
 import matplotlib.pyplot as plt
 path.append('..')
 from path_planning import GapFinding, SimpleGapFinder
+from time import time
 
 acceptable_error = .001
 
@@ -25,7 +26,7 @@ def actual_lidar():
 @pytest.fixture
 def simple_gap_finder():
     finder = SimpleGapFinder(.5)
-    finder.setDistanceRange(20)
+    finder.setDistanceRange(5)
     return finder
 # def test_polarToCartesian(simple_lidar):
 #     x, y = simple_lidar.polarToCartesian([1, 1], [0, pi / 2])
@@ -261,9 +262,9 @@ def ntest_findSubgoals_actual_data(simple_gap_finder):
 def test_findSubgoals_actual_data(simple_gap_finder):
     target_distance = 4
     target_angle = pi / 4
-    start = 160
-    end = 225
-    for file in [glob.glob("*.npy")[0]]:
+    start = 120
+    end = 250
+    for file in glob.glob("*.npy"):
         # print test
         data = load(file)
         print file
@@ -271,21 +272,24 @@ def test_findSubgoals_actual_data(simple_gap_finder):
         # distances[:100]=[30]*100
         # distances[250:]=[30]*291
         angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
-        distances = distances[start:end]
-        angles = angles[start:end]
+        # distances = distances[start:end]
+        # angles = angles[start:end]
+        start_time = time()
+
         simple_gap_finder.filterReadings(distances, angles)
         x, y = simple_gap_finder.polarToCartesian()
         # simple_gap_finder.findObstacleLimits(x, y)
         travel = simple_gap_finder.findGaps()
         subgoals = simple_gap_finder.findSubgoals(travel)
         best_subgoal = simple_gap_finder.selectSubgoal(subgoals, target_distance, target_angle)
+        print 'the algorithm took:', time() - start_time
         # print 'travel:',travel
         # print distances,travel
         # print simple_gap_finder.readings_polar
 
         f0 = plt.figure()
         ax0 = f0.add_subplot(111)
-        ax0.plot(x, y, 'r')
+        ax0.plot(x, y, 'r.')
         ax0.plot(0, 0, 'ko', markersize=5)
         for i in range(len(travel)):
             x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
@@ -293,8 +297,8 @@ def test_findSubgoals_actual_data(simple_gap_finder):
             if i in subgoals:
                 ax0.plot(x[i], y[i], 'mo', markersize=10)
                 # print travel[i]
-            ax0.plot([0,x[i]],[0,y[i]], 'b')
 
+        ax0.plot(x,y, 'b.')
         ax0.plot(travel[best_subgoal] * cos(simple_gap_finder.readings_polar[best_subgoal][1]),
                  travel[best_subgoal] * sin(simple_gap_finder.readings_polar[best_subgoal][1]), 'go', markersize=20)
         ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20,linewidth = 10)
