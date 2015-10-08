@@ -260,7 +260,7 @@ def ntest_findSubgoals_actual_data(simple_gap_finder):
 
 
 def test_findSubgoals_actual_data(simple_gap_finder):
-    target_distance = 4
+    target_distance = 1
     target_angle = pi / 4
     start = 120
     end = 250
@@ -282,6 +282,7 @@ def test_findSubgoals_actual_data(simple_gap_finder):
         travel = simple_gap_finder.findGaps()
         subgoals = simple_gap_finder.findSubgoals(travel)
         best_subgoal = simple_gap_finder.selectSubgoal(subgoals, target_distance, target_angle)
+        print 'Is obstacle in the way?',simple_gap_finder.isObstacleInTheWay(travel,target_distance,target_angle)
         print 'the algorithm took:', time() - start_time
         # print 'travel:',travel
         # print distances,travel
@@ -298,10 +299,10 @@ def test_findSubgoals_actual_data(simple_gap_finder):
                 ax0.plot(x[i], y[i], 'mo', markersize=10)
                 # print travel[i]
 
-        ax0.plot(x,y, 'b.')
         ax0.plot(travel[best_subgoal] * cos(simple_gap_finder.readings_polar[best_subgoal][1]),
                  travel[best_subgoal] * sin(simple_gap_finder.readings_polar[best_subgoal][1]), 'go', markersize=20)
-        ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20,linewidth = 10)
+        ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20, linewidth=10)
+        ax0.plot(x, y, 'b.')
         ax0.axis('equal')
         plt.draw()
         plt.pause(.1)
