@@ -260,51 +260,85 @@ def ntest_findSubgoals_actual_data(simple_gap_finder):
 
 
 def test_findSubgoals_actual_data(simple_gap_finder):
+    obj = simple_gap_finder
     target_distance = 1
     target_angle = pi / 4
-    start = 120
-    end = 250
+
     for file in glob.glob("*.npy"):
         # print test
         data = load(file)
-        print file
+        # print file
         distances = data
         # distances[:100]=[30]*100
         # distances[250:]=[30]*291
-        angles = linspace(-pi / 4, 5 * pi / 4, len(distances))
-        # distances = distances[start:end]
-        # angles = angles[start:end]
-        start_time = time()
+        for i in range(4):
+            angles = linspace(-pi / 4 + i * pi / 2, 5 * pi / 4+ i * pi / 2, len(distances))
 
-        simple_gap_finder.filterReadings(distances, angles)
-        x, y = simple_gap_finder.polarToCartesian()
-        # simple_gap_finder.findObstacleLimits(x, y)
-        travel = simple_gap_finder.findGaps()
-        subgoals = simple_gap_finder.findSubgoals(travel)
-        best_subgoal = simple_gap_finder.selectSubgoal(subgoals, target_distance, target_angle)
-        print 'Is obstacle in the way?',simple_gap_finder.isObstacleInTheWay(travel,target_distance,target_angle)
-        print 'the algorithm took:', time() - start_time
+            obj.filterReadings(distances, angles)
+            x, y = obj.polarToCartesian()
+            # obj.findObstacleLimits(x, y)
+            obj.findGaps()
+            obj.findSubgoals()
+            best_subgoal = obj.selectSubgoal(target_distance, target_angle)
+            environment_state = obj.isObstacleInTheWay(target_distance, target_angle)
+        # print 'Is obstacle in the way?',environment_state
+        # print 'the algorithm took:', time() - start_time
         # print 'travel:',travel
         # print distances,travel
-        # print simple_gap_finder.readings_polar
+        # print obj.readings_polar
 
-        f0 = plt.figure()
-        ax0 = f0.add_subplot(111)
-        ax0.plot(x, y, 'r.')
-        ax0.plot(0, 0, 'ko', markersize=5)
-        for i in range(len(travel)):
-            x[i] = travel[i] * cos(simple_gap_finder.readings_polar[i][1])
-            y[i] = travel[i] * sin(simple_gap_finder.readings_polar[i][1])
-            if i in subgoals:
-                ax0.plot(x[i], y[i], 'mo', markersize=10)
-                # print travel[i]
+            f0 = plt.figure()
+            ax0 = f0.add_subplot(111)
+            ax0.plot(x, y, 'r.')
+            ax0.plot(0, 0, 'ko', markersize=5)
+            for i in range(len(obj.possible_travel)):
+                x[i] = obj.possible_travel[i] * cos(obj.readings_polar[i][1])
+                y[i] = obj.possible_travel[i] * sin(obj.readings_polar[i][1])
+                if i in obj.subgoals:
+                    ax0.plot(x[i], y[i], 'mo', markersize=10)
+                    # print obj.possible_travel[i]
+            if environment_state is 'not_safe':
+                ax0.plot(obj.possible_travel[best_subgoal] * cos(obj.readings_polar[best_subgoal][1]),
+                         obj.possible_travel[best_subgoal] * sin(obj.readings_polar[best_subgoal][1]), 'go', markersize=20)
+            elif environment_state is 'safe':
+                ax0.plot(target_distance * cos(target_angle),
+                         target_distance * sin(target_angle), 'go', markersize=20)
+            elif environment_state is 'close_to_obstacle':
+                ax0.plot(target_distance * cos(target_angle),
+                         target_distance * sin(target_angle), 'ro', markersize=20)
+            ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20, linewidth=10)
+            ax0.plot(x, y, 'b.')
+            ax0.axis('equal')
+            plt.draw()
+            plt.pause(.1)
+            raw_input("<Hit Enter To Close>")
+            plt.close(f0)
 
-        ax0.plot(travel[best_subgoal] * cos(simple_gap_finder.readings_polar[best_subgoal][1]),
-                 travel[best_subgoal] * sin(simple_gap_finder.readings_polar[best_subgoal][1]), 'go', markersize=20)
-        ax0.plot(target_distance * cos(target_angle), target_distance * sin(target_angle), 'cx', markersize=20, linewidth=10)
-        ax0.plot(x, y, 'b.')
-        ax0.axis('equal')
-        plt.draw()
-        plt.pause(.1)
-        raw_input("<Hit Enter To Close>")
-        plt.close(f0)
+
+def ntest_execution_time(simple_gap_finder):
+    total_time = 0
+    target_distance = 1
+    target_angle = pi / 4
+    for file in glob.glob("*.npy"):
+        # print test
+        data = load(file)
+        # print file
+        distances = data
+        # distances[:100]=[30]*100
+        # distances[250:]=[30]*291
+        for i in range(20):
+            angles = linspace(-pi / 4 + i * pi / 10, 5 * pi / 4, len(distances))
+            # distances = distances[start:end]
+            # angles = angles[start:end]
+            start_time = time()
+
+            simple_gap_finder.filterReadings(distances, angles)
+            # x, y = simple_gap_finder.polarToCartesian()
+            # simple_gap_finder.findObstacleLimits(x, y)
+            travel = simple_gap_finder.findGaps()
+            simple_gap_finder.findSubgoals(travel)
+            simple_gap_finder.selectSubgoal(target_distance, target_angle)
+            simple_gap_finder.isObstacleInTheWay(target_distance, target_angle)
+            time_elapsed = time() - start_time
+            total_time = total_time + time_elapsed
+    print 'took:', total_time

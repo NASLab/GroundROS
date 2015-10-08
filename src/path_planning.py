@@ -176,40 +176,25 @@ class SimpleGapFinder(object):
         x_cordinate = [reading[0] * cos(reading[1]) for reading in self.readings_polar]
         y_cordinate = [reading[0] * sin(reading[1]) for reading in self.readings_polar]
 
-        # for i in range(len(self.readings_polar)):
-        #     x_cordinate[i] = self.readings_polar[i][0] * cos(self.readings_polar[i][1])
-        #     y_cordinate[i] = self.readings_polar[i][0] * sin(self.readings_polar[i][1])
-
         return x_cordinate, y_cordinate
 
     def filterReadings(self, distances, angles):
-        number_of_all_readings = len(distances)
+        number_of_unfiltered_readings = len(distances)
         inner_bound = self.safe_radius * .7
-        for i in range(number_of_all_readings):
-            # print distances[i], angles[i]
-            if distances[i] < inner_bound:  # and distances[i] != 0.0:
-                distances[i] = -1
-            # elif distances[i] == 0.0:
-            #     distances[i] = -1
 
-        # print distances
-        self.readings_polar = [[distances[i], angles[i]] for i in range(number_of_all_readings) if distances[i] != -1]
-        # print self.readings_polar
-        # print len(self.readings_polar),self.readings_polar
+        for i in range(number_of_unfiltered_readings):
+            if distances[i] < inner_bound:
+                distances[i] = -1
+
+        self.readings_polar = [[distances[i], angles[i]] for i in range(number_of_unfiltered_readings) if distances[i] != -1]
         self.number_of_readings = len(self.readings_polar)
-        # distances = [distance for distance in distances if distance != None]
-        # angles = [angle for angle in angles if angle != None]
-        # self.reading_distances = distances
-        return distances, angles
 
     def findGaps(self):
-        start_time = time()
         d = self.safe_radius**2
-        # print self.readings_polar
-        possible_travel = [reading[0] - self.safe_radius for reading in self.readings_polar]
-        for i in range(len(self.readings_polar)):
-            # possible_travel[i] = (self.readings_polar[i][0] - self.safe_radius)
-            # print possible_travel[i],
+        self.possible_travel = [reading[0] - self.safe_radius for reading in self.readings_polar]
+
+        for i in range(self.number_of_readings):
+
             for j in range(i - 1, -1, -1):
                 angular_difference = self.readings_polar[i][1] - self.readings_polar[j][1]
                 if angular_difference > pi / 2:
@@ -219,7 +204,7 @@ class SimpleGapFinder(object):
                 c = (self.readings_polar[j][0] * sin(angular_difference))**2
                 a = (self.readings_polar[j][0] * cos(angular_difference))
                 if c < d and a > self.safe_radius:
-                    possible_travel[i] = min(possible_travel[i], a - sqrt(d - c))
+                    self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
 
             for j in range(i + 1, self.number_of_readings):
                 angular_difference = self.readings_polar[j][1] - self.readings_polar[i][1]
@@ -230,28 +215,26 @@ class SimpleGapFinder(object):
                 c = (self.readings_polar[j][0] * sin(angular_difference))**2
                 a = (self.readings_polar[j][0] * cos(angular_difference))
                 if c < d and a > self.safe_radius:
-                    possible_travel[i] = min(possible_travel[i], a - sqrt(d - c))
-            # print possible_travel[i]
-        print 'the algorithm took:', time() - start_time
-        return possible_travel
+                    self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
 
-    def findSubgoals(self, possible_travel):
-        subgoals = [0, len(possible_travel) - 1]
-        for i in range(1, len(possible_travel)):
-            if possible_travel[i] - possible_travel[i - 1] > self.safe_radius:
-                subgoals.append(i)
-            elif possible_travel[i - 1] - possible_travel[i] > self.safe_radius:
-                subgoals.append(i - 1)
+    def findSubgoals(self):
+        self.subgoals = [0, self.number_of_readings - 1]
+        for i in range(self.number_of_readings - 1):
+            if self.possible_travel[i + 1] - self.possible_travel[i] > self.safe_radius:
+                self.subgoals.append(i + 1)
+            elif self.possible_travel[i] - self.possible_travel[i + 1] > self.safe_radius:
+                self.subgoals.append(i)
 
-        return subgoals
+        # return self.subgoals
 
-    def selectSubgoal(self, subgoals, distance, theta):
+    def selectSubgoal(self, distance, theta):
         # checks which subgoal is closer to the target and returns its index number
         best_subgoal = 0
         # best_angle = []
-        best_distance = distance**2
-        print 'best distance in the beginning:', best_distance
-        for subgoal in subgoals:
+        best_distance = distance**2 + self.readings_polar[0][0]**2 - 2 * distance * \
+            self.readings_polar[0][0] * cos(self.readings_polar[0][1] - theta)
+        # print 'best distance in the beginning:', best_distance
+        for subgoal in self.subgoals[1:]:
             distance_to_target_sq = distance**2 + self.readings_polar[subgoal][0]**2 - 2 * distance * \
                 self.readings_polar[subgoal][0] * cos(self.readings_polar[subgoal][1] - theta)
             # print 'dist:', distance_to_target_sq, best_distance
@@ -259,20 +242,18 @@ class SimpleGapFinder(object):
                 # print 'selected subgoal:', subgoal
                 best_subgoal = subgoal
                 best_distance = distance_to_target_sq
-                # best_angle = self.readings_polar[subgoal][1]
-            print 'subgoal and distance:', subgoal, distance_to_target_sq
-        print 'selected subgoal and distance:', best_subgoal, best_distance
-        # print best_subgoal
+
         return best_subgoal
 
-    def isObstacleInTheWay(self,possible_travel,distance,theta):
-        nearest_reading  = []
-        for i in range(len(possible_travel)):
-            if self.readings_polar[i][1]-theta>0:
+    def isObstacleInTheWay(self, distance, theta):
+        nearest_reading = []
+        for i in range(self.number_of_readings):
+            if self.readings_polar[i][1] - theta > 0:
                 nearest_reading = i
                 break
-
-        if possible_travel[nearest_reading]>distance and possible_travel[nearest_reading-1]>distance:
-            return False
+        if self.possible_travel[nearest_reading] > distance and self.possible_travel[nearest_reading - 1] > distance:
+            return 'safe'
+        elif self.readings_polar[i][0] > distance and self.readings_polar[i - 1][0] > distance:
+            return 'close_to_obstacle'
         else:
-            return True
+            return 'not_safe'
