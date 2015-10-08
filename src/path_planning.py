@@ -251,9 +251,10 @@ class SimpleGapFinder(object):
             if self.readings_polar[i][1] - theta > 0:
                 nearest_reading = i
                 break
-        if self.possible_travel[nearest_reading] > distance and self.possible_travel[nearest_reading - 1] > distance:
+        safe_travel = min(self.possible_travel[nearest_reading],self.possible_travel[nearest_reading - 1])
+        if  safe_travel > distance:
             return 'safe'
-        elif self.readings_polar[i][0] > distance and self.readings_polar[i - 1][0] > distance:
+        elif safe_travel + self.safe_radius> distance:
             return 'close_to_obstacle'
         else:
             return 'not_safe'
