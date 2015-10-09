@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, '..')
-import pathGenerator as pthgen
+import path_generator as pthgen
 import matplotlib.pyplot as plt
 import time
 import numpy as np
