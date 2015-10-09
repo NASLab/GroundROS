@@ -2,6 +2,10 @@ from numpy import cos, sin, pi, arcsin, sqrt
 from time import time
 nan = float('nan')
 
+class PathPlanningError(Exception):
+    def __init__(self,message,errors=-1):
+        super(PathPlanningError,self).__init__(message)
+
 
 class GapFinding(object):
 
@@ -161,7 +165,7 @@ class GapFinding(object):
         return False
 
 
-class SimpleGapFinder(object):
+class GapFinder(object):
 
     def __init__(self, safe_radius):
         self.safe_radius = safe_radius * 1.0
@@ -170,7 +174,10 @@ class SimpleGapFinder(object):
         self.readings_polar = []
 
     def setDistanceRange(self, distance_range):
-        self.distance_range = distance_range
+        if distance_range>0:
+            self.distance_range = distance_range
+        else:
+            raise PathPlanningError('Range of sensor should be greater than zero.')
 
     def polarToCartesian(self):
         x_cordinate = [reading[0] * cos(reading[1]) for reading in self.readings_polar]
