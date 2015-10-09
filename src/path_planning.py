@@ -231,15 +231,12 @@ class SimpleGapFinder(object):
         # checks which subgoal is closer to the target and returns its index number
         best_subgoal = 0
         # best_angle = []
-        best_distance = distance**2 + self.readings_polar[0][0]**2 - 2 * distance * \
-            self.readings_polar[0][0] * cos(self.readings_polar[0][1] - theta)
-        # print 'best distance in the beginning:', best_distance
+        best_distance = distance**2 + self.possible_travel[0]**2 - 2 * distance * self.possible_travel[0] * cos(self.readings_polar[0][1] - theta)
+
         for subgoal in self.subgoals[1:]:
-            distance_to_target_sq = distance**2 + self.readings_polar[subgoal][0]**2 - 2 * distance * \
-                self.readings_polar[subgoal][0] * cos(self.readings_polar[subgoal][1] - theta)
-            # print 'dist:', distance_to_target_sq, best_distance
+            distance_to_target_sq = distance**2 + self.possible_travel[subgoal]**2 - 2 * distance * \
+                self.possible_travel[subgoal] * cos(self.readings_polar[subgoal][1] - theta)
             if distance_to_target_sq < best_distance:
-                # print 'selected subgoal:', subgoal
                 best_subgoal = subgoal
                 best_distance = distance_to_target_sq
 
