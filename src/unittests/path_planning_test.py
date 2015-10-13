@@ -1,9 +1,9 @@
 # content of test_sample.py
 import pytest
 from numpy import pi, load, linspace, sin, cos
-from sys import path
 import glob
 import matplotlib.pyplot as plt
+from sys import path
 path.append('..')
 from path_planning import GapFinding, GapFinder
 from time import time

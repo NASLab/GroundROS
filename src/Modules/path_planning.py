@@ -236,25 +236,25 @@ class GapFinder(object):
 
         # return self.subgoals
 
-    def selectSubgoal(self, distance, theta):
+    def selectSubgoal(self, distance, angle):
         # checks which subgoal is closer to the target and returns its index number
         best_subgoal = 0
         # best_angle = []
-        best_distance = distance**2 + self.possible_travel[0]**2 - 2 * distance * self.possible_travel[0] * cos(self.readings_polar[0][1] - theta)
+        best_distance = distance**2 + self.possible_travel[0]**2 - 2 * distance * self.possible_travel[0] * cos(self.readings_polar[0][1] - angle)
 
         for subgoal in self.subgoals[1:]:
             distance_to_target_sq = distance**2 + self.possible_travel[subgoal]**2 - 2 * distance * \
-                self.possible_travel[subgoal] * cos(self.readings_polar[subgoal][1] - theta)
+                self.possible_travel[subgoal] * cos(self.readings_polar[subgoal][1] - angle)
             if distance_to_target_sq < best_distance:
                 best_subgoal = subgoal
                 best_distance = distance_to_target_sq
 
         return best_subgoal
 
-    def isObstacleInTheWay(self, distance, theta):
+    def isObstacleInTheWay(self, distance, angle):
         nearest_reading = []
         for i in range(self.number_of_readings):
-            if self.readings_polar[i][1] - theta > 0:
+            if self.readings_polar[i][1] - angle > 0:
                 nearest_reading = i
                 break
         safe_travel = min(self.possible_travel[nearest_reading], self.possible_travel[nearest_reading - 1])
@@ -264,3 +264,17 @@ class GapFinder(object):
             return 'close_to_obstacle'
         else:
             return 'not_safe'
+
+    def planPath(self, distance, angle):
+        self.findGaps()
+        environment_state = self.isObstacleInTheWay(distance, angle)
+        if environment_state is 'safe':
+            return distance, angle
+        elif environment_state is 'not_safe':
+            self.findSubgoals()
+            best_subgoal = self.selectSubgoal
+            return self.possible_travel[best_subgoal], self.readings_polar[best_subgoal][1]
+        elif environment_state is 'close_to_obstacle':
+            raise PathPlanningError('Target is too close to an obstacle.')
+        else:
+            raise PathPlanningError.ImplementationError('Something wrong in planPath method of' + __name__)
