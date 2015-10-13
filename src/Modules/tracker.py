@@ -1,15 +1,13 @@
-import numpy as np
+from numpy import pi, sin, cos, append, save
 from rotation import rotate2DimFrame, wrapAnglePi
 from control_system import Proportional
 from datetime import datetime  # remove later
 from time import time
 
-# print ctrl_sys
-
 
 class PlanarTracker(object):
 
-    def __init__(self, actuate_function, localization_function):
+    def __init__(self, actuate_function, localization_function=[]):
         self.actuate = actuate_function
         self.locate = localization_function
 
@@ -23,6 +21,11 @@ class PlanarTracker(object):
         self.long_control = Proportional()
         self.lateral_control = Proportional()
         self.angular_control = Proportional()
+
+        self.dynamic_long_control = Proportional()
+        self.dynamic_lateral_control = Proportional()
+        self.dynamic_long_control.setGain(self.long_ultimate_gain / 4)
+        self.dynamic_lateral_control.setGain(self.lateral_ultimate_gain / 2)
 
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
 
@@ -48,6 +51,13 @@ class PlanarTracker(object):
         print 'Longitutional error:', long_error, 'm | Lateral error:', lateral_error, 'm'
         # pass
 
+    def moveTowardsDynamicPoint(self, distance, theta):
+        long_error = distance * cos(theta)
+        lateral_error = distance * sin(theta)
+        feedback_linear = self.dynamic_long_control.controllerOutput(long_error)
+        feedback_angular = self.dynamic_lateral_control.controllerOutput(lateral_error)
+        self.actuate(feedback_linear, feedback_angular)
+
     def faceDirection(self, theta):
         print 'Facing direction.'
         bound = .02
@@ -57,7 +67,7 @@ class PlanarTracker(object):
             feedback_angular = self.angular_control.controllerOutput(theta_error)
             self.actuate(0, feedback_angular)
             theta_error = wrapAnglePi(theta - self.locate()[2])
-        print 'Angular error:', theta_error, 'radians =', theta_error * 180 / np.pi, 'degrees'
+        print 'Angular error:', theta_error, 'radians =', theta_error * 180 / pi, 'degrees'
 
     def followTrajectory(self, trajectory):
         print 'Following Trajectory.'
@@ -77,12 +87,12 @@ class PlanarTracker(object):
             self.actuate(feedback_linear, feedback_angular)
 
             reference_pos = trajectory.getPosition()
-            self.logger = np.append(self.logger, [[long_error, lateral_error,
-                                                   x_reference, y_reference,
-                                                   x_actual, y_actual,
-                                                   theta_actual, time()]], axis=0)
+            self.logger = append(self.logger, [[long_error, lateral_error,
+                                                x_reference, y_reference,
+                                                x_actual, y_actual,
+                                                theta_actual, time()]], axis=0)
 
-        np.save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followTrajectory', self.logger)
+        save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followTrajectory', self.logger)
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
         print 'Reached end of trajectory.'
 
@@ -105,12 +115,12 @@ class PlanarTracker(object):
             self.actuate(feedback_linear, feedback_angular)
 
             reference_pos = path.getPosition()
-            self.logger = np.append(self.logger, [[long_error, lateral_error,
-                                                   x_reference, y_reference,
-                                                   x_actual, y_actual,
-                                                   theta_actual, time()]], axis=0)
+            self.logger = append(self.logger, [[long_error, lateral_error,
+                                                x_reference, y_reference,
+                                                x_actual, y_actual,
+                                                theta_actual, time()]], axis=0)
 
-        np.save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followPath', self.logger)
+        save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followPath', self.logger)
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
         print 'Reached end of path.'
 

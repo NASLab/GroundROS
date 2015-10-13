@@ -1,17 +1,19 @@
-import numpy as np
+# import numpy as np
+from numpy import pi, sin, cos, insert, cumsum, linspace, diff, hypot
 from scipy.interpolate import interp1d
 from time import time
-import sys
 
 # Generate a path
 
 nan_var = float('nan')
 
+
 class PathError(Exception):
+
     def __init__(self, message, errors=-1):
 
-    # Call the base class constructor with the parameters it needs
-    super(ControlSystemError, self).__init__(message)
+        # Call the base class constructor with the parameters it needs
+        super(PathError, self).__init__(message)
 
 
 class PathGenerator():
@@ -19,7 +21,7 @@ class PathGenerator():
     def __init__(self, path_type='circle', speed=.1):
         self.time = time()
         self.travel_distance = 0
-        self.__path_type = path_type
+        self.path_type = path_type
         self.speed = speed
         self.x_array = []
         self.y_array = []
@@ -42,7 +44,7 @@ class PathGenerator():
             self.speed = 0
             self.__generatePoint()
         else:
-            sys.exit('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
+            raise PathError('PathGeneration(): Wrong path type. Available options are "circle", "infinity", and "square".')
         # self.x = self.x_array[0]
         # self.y = self.y_array[0]
 
@@ -53,8 +55,8 @@ class PathGenerator():
     def getPosition(self):
         time_now = time()
         self.travel_distance = self.travel_distance + self.speed * (time_now - self.time)
-        if self.travel_distance>self.total_distance:
-            raise PathError('Reached end of path')
+        if self.travel_distance > self.total_distance:
+            # raise PathError('Reached end of path')
             return nan_var
         else:
             self.time = time()
@@ -76,22 +78,22 @@ class PathGenerator():
         self.y_function = lambda x: y
 
     def __generateCircle(self):
-        angle_steps = np.linspace(0, 2 * np.pi, num=101)
-        self.x_array = self.radial_boundry * np.cos(angle_steps)
-        self.y_array = self.radial_boundry * np.sin(angle_steps)
-        self.distance_array = np.linspace(0, self.radial_boundry * 2 * np.pi, num=101)
-        self.total_distance = self.radial_boundry * 2 * np.pi
+        angle_steps = linspace(0, 2 * pi, num=101)
+        self.x_array = self.radial_boundry * cos(angle_steps)
+        self.y_array = self.radial_boundry * sin(angle_steps)
+        self.distance_array = linspace(0, self.radial_boundry * 2 * pi, num=101)
+        self.total_distance = self.radial_boundry * 2 * pi
         self.x_function = interp1d(self.distance_array, self.x_array, kind='quadratic')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='quadratic')
 
     def __generateInfinity(self):
-        angle_steps = np.linspace(0, 2 * np.pi, num=101)
-        self.x_array = self.radial_boundry * np.cos(angle_steps)
-        self.y_array = self.radial_boundry * np.sin(2 * angle_steps)
-        x_steps = np.diff(self.x_array)
-        y_steps = np.diff(self.y_array)
-        hypot_steps = np.hypot(x_steps, y_steps)
-        self.distance_array = np.insert(np.cumsum(hypot_steps), 0, 0)
+        angle_steps = linspace(0, 2 * pi, num=101)
+        self.x_array = self.radial_boundry * cos(angle_steps)
+        self.y_array = self.radial_boundry * sin(2 * angle_steps)
+        x_steps = diff(self.x_array)
+        y_steps = diff(self.y_array)
+        hypot_steps = hypot(x_steps, y_steps)
+        self.distance_array = insert(cumsum(hypot_steps), 0, 0)
         self.total_distance = self.distance_array[-1]
         self.x_function = interp1d(self.distance_array, self.x_array, kind='cubic')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='cubic')
@@ -100,31 +102,31 @@ class PathGenerator():
         self.x_function = interp1d(self.distance_array, self.x_array)
         self.y_function = interp1d(self.distance_array, self.y_array)
 
-    def __generateLine(self, slope=np.pi/6):
-        self.x_array = np.cos(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
-        self.y_array = np.sin(slope) * np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
-        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
+    def __generateLine(self, slope=pi / 6):
+        self.x_array = cos(slope) * linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.y_array = sin(slope) * linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.distance_array = linspace(0, 2 * self.radial_boundry, num=101)
         self.total_distance = self.radial_boundry * 2
-        self.x_function = lambda x: x*np.cos(slope) - np.cos(slope)
-        self.y_function = lambda x: x*np.sin(slope) - np.sin(slope)
+        self.x_function = lambda x: x * cos(slope) - cos(slope)
+        self.y_function = lambda x: x * sin(slope) - sin(slope)
 
-    def __generateBrokenLine(self, slope_1=0, slope_2=np.pi / 6):
-        x_array_1 = np.cos(slope_1) * np.linspace(-self.radial_boundry, 0, num=51)
-        x_array_2 = np.cos(slope_2) * np.linspace(0, self.radial_boundry, num=51)
-        self.x_array = np.concatenate([x_array_1, x_array_2[1:]])
-        y_array_1 = np.sin(slope_1) * np.linspace(-self.radial_boundry, 0, num=51)
-        y_array_2 = np.sin(slope_2) * np.linspace(0, self.radial_boundry, num=51)
-        self.y_array = np.concatenate([y_array_1, y_array_2[1:]])
-        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
+    def __generateBrokenLine(self, slope_1=0, slope_2=pi / 6):
+        x_array_1 = cos(slope_1) * linspace(-self.radial_boundry, 0, num=51)
+        x_array_2 = cos(slope_2) * linspace(0, self.radial_boundry, num=51)
+        self.x_array = [x_array_1] + [x_array_2[1:]]
+        y_array_1 = sin(slope_1) * linspace(-self.radial_boundry, 0, num=51)
+        y_array_2 = sin(slope_2) * linspace(0, self.radial_boundry, num=51)
+        self.y_array = [y_array_1] + [y_array_2[1:]]
+        self.distance_array = linspace(0, 2 * self.radial_boundry, num=101)
         self.total_distance = self.radial_boundry * 2
         self.x_function = interp1d(self.distance_array, self.x_array, kind='linear')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='linear')
 
     def __twoLines(self):
-        self.x_array = np.linspace(-self.radial_boundry, self.radial_boundry, num=101)
+        self.x_array = linspace(-self.radial_boundry, self.radial_boundry, num=101)
         self.total_distance = self.radial_boundry * 2
-        self.y_array = np.concatenate([[-self.radial_boundry / 4.0 for i in range(51)], [self.radial_boundry / 4.0 for i in range(50)]])
-        self.distance_array = np.linspace(0, 2 * self.radial_boundry, num=101)
+        self.y_array = [-self.radial_boundry / 4.0 for i in range(51)] + [self.radial_boundry / 4.0 for i in range(50)]
+        self.distance_array = linspace(0, 2 * self.radial_boundry, num=101)
         self.x_function = interp1d(self.distance_array, self.x_array, kind='linear')
         self.y_function = interp1d(self.distance_array, self.y_array, kind='linear')
 
