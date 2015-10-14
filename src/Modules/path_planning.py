@@ -1,4 +1,4 @@
-from numpy import cos, sin, pi, sqrt
+from numpy import cos, sin, pi, sqrt,arctan2
 # from time import time
 # nan = float('nan')
 
@@ -169,6 +169,8 @@ class PathPlanningError(Exception):
 
 class GapFinder(object):
 
+    """This is a path planning class for ground vehicles that suggests trajectories or points to avoid collision with obstacles using sensor readings."""
+
     def __init__(self, safe_radius):
         self.safe_radius = safe_radius * 1.0
         self.safe_gap = self.safe_radius**2 * 4
@@ -188,11 +190,13 @@ class GapFinder(object):
         return x_cordinate, y_cordinate
 
     def filterReadings(self, distances, angles):
+        # print distances
         number_of_unfiltered_readings = len(distances)
-        inner_bound = self.safe_radius * .7
+        inner_bound = .4
 
         for i in range(number_of_unfiltered_readings):
             if distances[i] < inner_bound:
+                # print '????????????????',distances[i],i
                 distances[i] = -1
 
         self.readings_polar = [[distances[i], angles[i]] for i in range(number_of_unfiltered_readings) if distances[i] != -1]
@@ -212,8 +216,11 @@ class GapFinder(object):
                     continue
                 c = (self.readings_polar[j][0] * sin(angular_difference))**2
                 a = (self.readings_polar[j][0] * cos(angular_difference))
-                if c < d and a > self.safe_radius:
-                    self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
+                if c < d:
+                    if a > self.safe_radius:
+                        self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
+                    else:
+                        self.possible_travel[i] = 0
 
             for j in range(i + 1, self.number_of_readings):
                 angular_difference = self.readings_polar[j][1] - self.readings_polar[i][1]
@@ -223,15 +230,20 @@ class GapFinder(object):
                     continue
                 c = (self.readings_polar[j][0] * sin(angular_difference))**2
                 a = (self.readings_polar[j][0] * cos(angular_difference))
-                if c < d and a > self.safe_radius:
-                    self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
+                if c < d:
+                    if a > self.safe_radius:
+                        self.possible_travel[i] = min(self.possible_travel[i], a - sqrt(d - c))
+                    else:
+                        self.possible_travel[i] = 0
 
     def findSubgoals(self):
         self.subgoals = [0, self.number_of_readings - 1]
         for i in range(self.number_of_readings - 1):
             if self.possible_travel[i + 1] - self.possible_travel[i] > self.safe_radius:
+                # print i+1,self.possible_travel[i + 1] ,self.possible_travel[i]
                 self.subgoals.append(i + 1)
             elif self.possible_travel[i] - self.possible_travel[i + 1] > self.safe_radius:
+                # print i
                 self.subgoals.append(i)
 
         # return self.subgoals
@@ -245,36 +257,66 @@ class GapFinder(object):
         for subgoal in self.subgoals[1:]:
             distance_to_target_sq = distance**2 + self.possible_travel[subgoal]**2 - 2 * distance * \
                 self.possible_travel[subgoal] * cos(self.readings_polar[subgoal][1] - angle)
-            if distance_to_target_sq < best_distance:
+            if distance_to_target_sq < best_distance or self.possible_travel[best_subgoal] < .3:
                 best_subgoal = subgoal
                 best_distance = distance_to_target_sq
 
         return best_subgoal
 
     def isObstacleInTheWay(self, distance, angle):
-        nearest_reading = []
+        # print angle*180/pi
+        nearest_reading = 0
         for i in range(self.number_of_readings):
+            # print '????????????????',self.readings_polar[i][1],angle
             if self.readings_polar[i][1] - angle > 0:
                 nearest_reading = i
                 break
+
+        # if neerest_reading == []:
+        #     nearest_reading = 0
         safe_travel = min(self.possible_travel[nearest_reading], self.possible_travel[nearest_reading - 1])
+        # for i in range(self.number_of_readings):
+        #     print self.possible_travel[i],self.readings_polar[i][1]*180/pi
         if safe_travel > distance:
             return 'safe'
         elif safe_travel + self.safe_radius > distance:
+            print 'isObstacleInTheWay', safe_travel, distance
+            # for i in range(self.number_of_readings):
+            #     print self.readings_polar[i]
+            # print angle,self.readings_polar[nearest_reading]
+            # print
+            # '!!!!!!!!!!!!',nearest_reading,safe_travel,safe_travel+self.safe_radius,distance,self.possible_travel[nearest_reading],self.possible_travel[nearest_reading
+            # - 1]
             return 'close_to_obstacle'
         else:
             return 'not_safe'
 
-    def planPath(self, distance, angle):
+    def pathToLocalTarget(self, distance, angle):
         self.findGaps()
         environment_state = self.isObstacleInTheWay(distance, angle)
         if environment_state is 'safe':
+            # print 'safe-------------------'
             return distance, angle
         elif environment_state is 'not_safe':
             self.findSubgoals()
-            best_subgoal = self.selectSubgoal
+            best_subgoal = self.selectSubgoal(distance, angle)
+            # print best_subgoal
+            # print 'sugboal angle:',self.readings_polar[best_subgoal][1]
+            print 'not safe:', self.possible_travel[best_subgoal], self.readings_polar[best_subgoal][1] * 180 / pi
             return self.possible_travel[best_subgoal], self.readings_polar[best_subgoal][1]
         elif environment_state is 'close_to_obstacle':
+            # self.findSubgoals()
+            # best_subgoal = self.selectSubgoal(distance, angle)
+            # print best_subgoal
+            # return self.possible_travel[best_subgoal], self.readings_polar[best_subgoal][1]
             raise PathPlanningError('Target is too close to an obstacle.')
         else:
-            raise PathPlanningError.ImplementationError('Something wrong in planPath method of' + __name__)
+            raise PathPlanningError('Something wrong in planPath method of' + __name__)
+
+    def pathToGlobalTarget(self,target_x,target_y,localizer=[]):
+        x, y, theta = localizer()
+        diff_x = target_x - x
+        diff_y = target_y - y
+        distance = sqrt(diff_x**2 + diff_y**2)
+        angle = arctan2(diff_y, diff_x) - theta
+        subgoal_distance, subgoal_angle = self.obstacleAvoidance(distance, -angle)

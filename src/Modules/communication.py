@@ -4,13 +4,12 @@ import sys
 import struct
 
 
-class HuskeyConnect(object):
+class NaslabNetwork(object):
 
-    def __init__(self):
+    def __init__(self, ip_address='192.168.0.25'):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.settimeout(1)
-        ip_address = '192.168.0.25'
         server_address = (ip_address, 1895)
         print >>sys.stderr, 'Connecting To %s Port %s' % server_address
         self.sock.connect(server_address)

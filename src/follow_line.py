@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 from tracker import PlanarTracker
-from communication import HuskeyConnect
+from communication import NaslabNetwork
 from actuate import ROS2DimActuate
 from numpy import pi
 from path_generator import PathGenerator
 
 
-connection = HuskeyConnect()
+connection = NaslabNetwork()
 act = ROS2DimActuate()
 tracker = PlanarTracker(act.actuate, connection.getStates)
 

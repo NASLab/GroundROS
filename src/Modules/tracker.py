@@ -1,4 +1,4 @@
-from numpy import pi, sin, cos, append, save
+from numpy import pi, cos, append, save
 from rotation import rotate2DimFrame, wrapAnglePi
 from control_system import Proportional
 from datetime import datetime  # remove later
@@ -6,7 +6,7 @@ from time import time
 
 
 class PlanarTracker(object):
-
+    "This class helps ground robots to navigate on different types of reference trajectories/paths, move to a point, or change their facing."
     def __init__(self, actuate_function, localization_function=[]):
         self.actuate = actuate_function
         self.locate = localization_function
@@ -23,9 +23,9 @@ class PlanarTracker(object):
         self.angular_control = Proportional()
 
         self.dynamic_long_control = Proportional()
-        self.dynamic_lateral_control = Proportional()
+        self.dynamic_angular_control = Proportional()
         self.dynamic_long_control.setGain(self.long_ultimate_gain / 4)
-        self.dynamic_lateral_control.setGain(self.lateral_ultimate_gain / 2)
+        self.dynamic_angular_control.setGain(self.lateral_ultimate_gain/2)
 
         self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
 
@@ -53,9 +53,11 @@ class PlanarTracker(object):
 
     def moveTowardsDynamicPoint(self, distance, theta):
         long_error = distance * cos(theta)
-        lateral_error = distance * sin(theta)
+        angular_error = theta
         feedback_linear = self.dynamic_long_control.controllerOutput(long_error)
-        feedback_angular = self.dynamic_lateral_control.controllerOutput(lateral_error)
+        feedback_angular = self.dynamic_angular_control.controllerOutput(angular_error)
+        # feedback_linear = 0
+        # feedback_angular = 0
         self.actuate(feedback_linear, feedback_angular)
 
     def faceDirection(self, theta):
