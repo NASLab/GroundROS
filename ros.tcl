@@ -26,6 +26,10 @@ spawn bash -c "scp -r administrator@192.168.4.11:$dir/experimental_results/*.npy
 authenticate
 
 send "\n"
+spawn bash -c "scp -r ./src/Modules/*.py administrator@192.168.4.11:$dir"
+authenticate
+
+send "\n"
 spawn bash -c "scp -r ./src/*.py administrator@192.168.4.11:$dir"
 authenticate
 
@@ -39,6 +43,6 @@ send "cd ~/barzin_catkin_ws\r"
 send "catkin_make\r"
 send "source devel/setup.bash\r"
 # send "rosrun path_tracking path_tracker_experiment.py\r"
-send "rosrun path_tracking mission.py"
+send "rosrun path_tracking avoid_obstacles.py"
 
 interact
