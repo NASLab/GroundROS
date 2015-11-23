@@ -25,10 +25,10 @@ class Navigation(object):
         self.path_planner = GapFinder(.5)
         self.actuation = ROS2DimActuate()
         self.tracker = PlanarTracker(self.actuation.actuate, self.connection.getStates)
-        self.tracker.setID(0)
-        self.target_body_number = 2
-        self.space = .75
-        self.direction = 1
+        self.tracker.setID(1)
+        self.target_body_number = 3
+        self.space = .9
+        # self.direction = 3
         self.subscriber = rospy.Subscriber('/scan', LaserScan, self.move, queue_size=1)
         rospy.spin()
 
@@ -38,7 +38,7 @@ class Navigation(object):
         distances = list(data.ranges)[0::every_other]
         self.path_planner.filterReadings(distances, angles)
 
-        x, y, theta = self.connection.getStates(0)
+        x, y, theta = self.connection.getStates(1)
         target_x, target_y, target_theta = self.connection.getStates(self.target_body_number)
         target_x = target_x + self.space * cos(target_theta)
         target_y = target_y + self.space * sin(target_theta)
@@ -48,18 +48,18 @@ class Navigation(object):
 
         if self.distance < .03:
 
-            if self.target_body_number == 1:
-                self.tracker.faceDirection(target_theta)
+            if self.target_body_number == 3:
+                self.tracker.faceDirection(target_theta+pi)
                 print 'ARRIVED!!!!!!!!!!!'
                 self.subscriber.unregister()
                 return
 
-            if self.target_body_number == 2:
-                self.tracker.faceDirection(pi+target_theta)
-                self.target_body_number = 1
-                self.space = -1.1
-                print 'ARRIVED!!!!!!!!!!!'
-                sleep(4)
+            # if self.target_body_number == 2:
+            #     self.tracker.faceDirection(pi+target_theta)
+            #     self.target_body_number = 1
+            #     self.space = -1.1
+            #     print 'ARRIVED!!!!!!!!!!!'
+            #     sleep(4)
 
         angle = arctan2(diff_y, diff_x) - theta
         subgoal_distance, subgoal_angle = self.path_planner.planPath(self.distance, -angle)
