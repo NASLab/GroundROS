@@ -4,7 +4,7 @@ log_user 1
 set timeout 10;
 
 set dir {~/barzin_catkin_ws/src/path_tracking/scripts}
-set ip {192.168.4.11}
+set ip {192.168.2.11}
 
 proc authenticate {} {
     expect {
@@ -44,6 +44,6 @@ send "cd ~/barzin_catkin_ws\r"
 send "catkin_make\r"
 send "source devel/setup.bash\r"
 #### send "rosrun path_tracking path_tracker_experiment.py\r"
-send "rosrun path_tracking tracking_performance_analysis.py"
+send "rosrun path_tracking avoid_obstacles_route2.py"
 
 interact
