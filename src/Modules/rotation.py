@@ -3,6 +3,17 @@ from numpy import sin, cos, pi
 nan_var = float('nan')
 radian_over_degree = pi / 180.0
 
+class Body(object):
+    def __init__(self):
+        pass
+    def rotate(self,theta,point=None):
+        pass
+
+
+
+class Point(object):
+    def __init__(self):
+        pass
 
 def rotate2DimFrame(initial_x, initial_y, theta):
     rotated_x = cos(theta) * initial_x + sin(theta) * initial_y

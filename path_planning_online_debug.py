@@ -9,12 +9,13 @@ from numpy import arange, pi, sqrt, arctan2, sin, cos
 # import logging
 from sensor_msgs.msg import LaserScan  # Messages from Lidar System
 # import sys
-from sys import path
+from sys import path, exit
 path.append('src/Modules/')
 from path_planning import GapFinder
-from communication import HuskeyConnect
+from communication import LabNavigation
 
-every_other = 3
+
+every_other = 1
 increment = pi * .5 / 180
 angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other]
 
@@ -25,10 +26,10 @@ angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other]
 class LidarLogger(object):
 
     def __init__(self):
-        self.path_planner = GapFinder(1)
+        self.path_planner = GapFinder(.6)
         rospy.init_node('lidarLogger')  # start the control node
         self.logger = []
-        self.connection = HuskeyConnect()
+        self.connection = LabNavigation()
         self.subscriber = rospy.Subscriber('/scan', LaserScan, self.readDistance)
         self.rate = rospy.Rate(10)  # set rate to 10 Hz
         # read = 0
@@ -40,7 +41,7 @@ class LidarLogger(object):
         #     pass
         # self.__run__() #start motion
         # except Exception, e:
-        #     print e
+            # print e
         #     print "Error during runtime. Exiting."
         #     logging.exception(e)
         # finally:
@@ -54,61 +55,74 @@ class LidarLogger(object):
     #         self.rate.sleep()
 
     def readDistance(self, data):
-        print 'here'
         self.subscriber.unregister()
         distances = list(data.ranges)[0::every_other]
+        # print distances
         self.path_planner.filterReadings(distances, angles)
+        # print self.path_planner
         x, y = self.path_planner.polarToCartesian()
-        robot_x, robot_y, robot_theta = self.connection.getStates()
-        target_x = 0
-        target_y = -2
+        crap1, robot_x, robot_y, robot_z, robot_yaw, crap, crap2 = self.connection.getStates(0)
+        target_x = -.5
+        target_y = 2.7
         diff_x = target_x - robot_x
         diff_y = target_y - robot_y
         distance = sqrt(diff_x**2 + diff_y**2)
-        if distance < .1:
+        # print 'here'
+        # if distance < .1:
             # print '.'
-            return
-        print 'here'
-        angle = arctan2(diff_y, diff_x) - robot_theta
-        subgoal_distance, subgoal_angle = self.path_planner.obstacleAvoidance(distance, -angle)
+        #     return
+        # print 'here'
+        angle = arctan2(diff_y, diff_x) - robot_yaw
+        subgoal_distance, subgoal_angle = self.path_planner.planPath(distance, -angle)
+        print distance, -angle, subgoal_distance, subgoal_angle
         # scan = data.ranges
         # print scan
         # self.logger = scan
-        print "Lidar Scan Recieved. Logging data..."
+        # print "Lidar Scan Recieved. Logging data..."
         f0 = plt.figure()
         ax0 = f0.add_subplot(111)
         nums = len(self.path_planner.possible_travel)
         # for i in range(nums):
         # ax0.plot(x, y, 'r.')
-        ax0.plot(robot_x, robot_y, 'ko', markersize=5)
+        # print self.path_planner.subgoals
         reading_x = [0] * nums
         reading_y = [0] * nums
+        subgoal_x = []
+        subgoal_y = []
         for i in range(len(self.path_planner.possible_travel)):
-            # print i,len(x)
+            # print robot_x , self.path_planner.possible_travel[i] , -self.path_planner.readings_polar[i][1] , calibrating_theta,robot_yaw
             # print self.path_planner.possible_travel
-            reading_x[i] = robot_x + self.path_planner.readings_polar[i][0] * cos(robot_theta - self.path_planner.readings_polar[i][1])
-            reading_y[i] = robot_y + self.path_planner.readings_polar[i][0] * sin(robot_theta - self.path_planner.readings_polar[i][1])
-            x[i] = robot_x + self.path_planner.possible_travel[i] * cos(-self.path_planner.readings_polar[i][1] + robot_theta)
-            y[i] = robot_y + self.path_planner.possible_travel[i] * sin(-self.path_planner.readings_polar[i][1] + robot_theta)
+            reading_x[i] = robot_x + self.path_planner.readings_polar[i][0] * cos(robot_yaw - self.path_planner.readings_polar[i][1])
+            reading_y[i] = robot_y + self.path_planner.readings_polar[i][0] * sin(robot_yaw - self.path_planner.readings_polar[i][1])
+            x[i] = robot_x + self.path_planner.possible_travel[i] * cos(-self.path_planner.readings_polar[i][1] + robot_yaw)
+            y[i] = robot_y + self.path_planner.possible_travel[i] * sin(-self.path_planner.readings_polar[i][1] + robot_yaw)
             if i in self.path_planner.subgoals:
-                ax0.plot(x[i], y[i], 'mo', markersize=10)
+                # print x[i]
+                subgoal_x = subgoal_x + [x[i]]
+                subgoal_y = subgoal_y + [y[i]]
+
+        # print subgoal_x
         # if environment_state is 'not_safe':
-        ax0.plot(reading_x, reading_y, 'r.')
-        ax0.plot(robot_x + subgoal_distance * cos(robot_theta - subgoal_angle),
-                 robot_y + subgoal_distance * sin(robot_theta - subgoal_angle), 'mo', markersize=20)
         # elif environment_state is 'safe':
         #     ax0.plot(target_distance * cos(target_angle),
         #              target_distance * sin(target_angle), 'go', markersize=20)
         # elif environment_state is 'close_to_obstacle':
         #     ax0.plot(target_distance * cos(target_angle),
         #              target_distance * sin(target_angle), 'ro', markersize=20)
-        ax0.plot(target_x, target_y, 'cx', markersize=20, linewidth=10)
-        ax0.plot(x, y, 'b.')
+        ax0.plot(subgoal_x, subgoal_y, 'mo', markersize=20, label='Subgoal Candidate')
+        ax0.plot(robot_x + subgoal_distance * cos(robot_yaw - subgoal_angle),
+                 robot_y + subgoal_distance * sin(robot_yaw - subgoal_angle), 'go', markersize=20, label='Best Subgoal')
+        ax0.plot(robot_x, robot_y, 'ko', markersize=15, label='Robot')
+        ax0.plot(target_x, target_y, 'cs', markersize=15, label='Destination')
+        ax0.plot(x, y, 'b.', markersize=10, label='Possible Travel')
+        ax0.plot(reading_x, reading_y, 'r.', markersize=10, label='LiDAR Reading')
+        ax0.legend()
         ax0.axis('equal')
         plt.draw()
         plt.pause(.1)
         raw_input("<Hit Enter To Close>")
         plt.close(f0)
+        return
 
 
 if __name__ == "__main__":

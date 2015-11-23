@@ -1,5 +1,1 @@
-{
-  "ControlSystem_test.py::test_bangbang": true, 
-  "ControlSystem_test.py::test_proportaional_with_gain": true, 
-  "ControlSystem_test.py::test_proportional_no_gain": true
-}
+{}

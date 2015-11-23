@@ -26,14 +26,16 @@ class Proportional(object):
 class PID(object):
 
     def __init__(self):
-        self.time = time()
-        self.kp = nan_var
-        self.ki = nan_var
-        self.kd = nan_var
+        self.time = None
+        self.kp = 0
+        self.ki = 0
+        self.kd = 0
         self.integral_error = 0
         self.error_previous = 0
 
     def controllerOutput(self, error):
+        if not self.time:
+            self.time = time()
         time_now = time()
         elapsed_time = time_now - self.time
         derivative_error = (error - self.error_previous) / elapsed_time
