@@ -79,7 +79,7 @@ class LidarLogger(object):
         # print scan
         # self.logger = scan
         # print "Lidar Scan Recieved. Logging data..."
-        f0 = plt.figure()
+        f0 = plt.figure(1,figsize=(9,9))
         ax0 = f0.add_subplot(111)
         nums = len(self.path_planner.possible_travel)
         # for i in range(nums):
@@ -109,11 +109,11 @@ class LidarLogger(object):
         # elif environment_state is 'close_to_obstacle':
         #     ax0.plot(target_distance * cos(target_angle),
         #              target_distance * sin(target_angle), 'ro', markersize=20)
-        ax0.plot(subgoal_x, subgoal_y, 'mo', markersize=20, label='Subgoal Candidate')
+        ax0.plot(subgoal_x, subgoal_y, 'ko', markersize=20, label='Subgoal Candidate')
         ax0.plot(robot_x + subgoal_distance * cos(robot_yaw - subgoal_angle),
                  robot_y + subgoal_distance * sin(robot_yaw - subgoal_angle), 'go', markersize=20, label='Best Subgoal')
-        ax0.plot(robot_x, robot_y, 'ko', markersize=15, label='Robot')
-        ax0.plot(target_x, target_y, 'cs', markersize=15, label='Destination')
+        ax0.plot(robot_x, robot_y, 'ms', markersize=10, label='Robot')
+        ax0.plot(target_x, target_y, 'cs', markersize=10, label='Destination')
         ax0.plot(x, y, 'b.', markersize=10, label='Possible Travel')
         ax0.plot(reading_x, reading_y, 'r.', markersize=10, label='LiDAR Reading')
         ax0.legend()
