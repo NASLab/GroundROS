@@ -27,7 +27,7 @@ vel = data[:, 8]
 # plt.gca().set_aspect('equal', adjustable='box')
 f0 = plt.figure(1, figsize=(9, 9))
 ax0 = f0.add_subplot(111)
-ax0.plot(ref_x, ref_y, '--', lw=3, label='Reference Trajectory')
+# ax0.plot(ref_x, ref_y, '--', lw=3, label='Reference Trajectory')
 ax0.plot(pos_x[0], pos_y[0], 'ms', markersize=10, label='Start Point')
 # ax0.plot(pos_x, pos_y, 'go', label='Robot Trajectory')
 env_data = np.load('env.npy')[1:]
@@ -69,7 +69,6 @@ for i in range(1, len(env_data) - 1):
 
         ax0.plot(readings_x, readings_y, 'r.')
 
-
 # for i in range(len(env_data)):
 #     if len(env_data[i])>0:
 #         x[i] = env_data[i][0]
@@ -92,7 +91,7 @@ for i in range(1, len(env_data) - 1):
 ax0.plot([], [], 'r.', label='Lidar Reading')
 # print x
 ax0.plot([value for value in x if value],
-         [value for value in y if value], 'g', lw=3)
+         [value for value in y if value], 'g', lw=3,label='Robot\'s Trajectory')
 
 
 # env_y = np.load('env.npy')[1]
