@@ -24,7 +24,7 @@ log = [[]] * log_length
 i = 0
 stage = 0
 finished_logging = False
-temp_var = 5
+temp_var = 1
 temp_var_2 = temp_var * log_length
 
 
@@ -34,13 +34,14 @@ class Navigation(object):
 
         self.gap = .6
         # self.space = .9
-        self.target_x = 1.4
-        self.target_y = 2.2
+        self.target_x = .5
+        self.target_y = 1
         self.agent_id = 0
 
         self.connection = LabNavigation()
         self.path_planner = GapFinder(self.gap)
         self.actuation = ROS2DimActuate()
+        self.actuation.setAngularVelocityLimit(.5)
         self.tracker = PlanarTracker(self.actuation.actuate, self.connection.getStates)
 
         self.tracker.setID(self.agent_id)
@@ -77,7 +78,7 @@ class Navigation(object):
         # print 'Controlled Velocity:', controlled_velocity,
         # print 'closest_reading:',closest_reading,
         # print 'Crash avert velocity:',self.crash_avert_velocity
-        self.actuation.setTangentialVelocityLimit(min(1, controlled_velocity))
+        self.actuation.setTangentialVelocityLimit(min(.2, controlled_velocity))
 
         i += 1
         if i % temp_var is 0 and i < temp_var_2:
