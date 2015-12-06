@@ -44,6 +44,6 @@ send "cd ~/barzin_catkin_ws\r"
 send "catkin_make\r"
 send "source devel/setup.bash\r"
 #### send "rosrun path_tracking path_tracker_experiment.py\r"
-send "rosrun path_tracking avoid_obstacles_route2.py"
+send "rosrun path_tracking microgrid_agent2.py"
 
 interact

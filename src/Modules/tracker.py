@@ -30,7 +30,7 @@ class PlanarTracker(object):
         self.dynamic_long_control.setGain(self.long_ultimate_gain / 4)
         self.dynamic_angular_control.setGain(self.lateral_ultimate_gain / 4)
 
-        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
     def setID(self, agent_id):
         self.agent_id = agent_id
@@ -53,7 +53,6 @@ class PlanarTracker(object):
         y_error = y - y_actual
         long_error, lateral_error = rotate2DimFrame(x_error, y_error, theta_actual)
         # long_error, lateral_error = getError()
-        # try:
         while (abs(long_error) > bound or abs(lateral_error) > bound) and pos == pos:
             pos = self.locate(self.agent_id)
             agent_id, x_actual, y_actual, z, theta_actual, pitch, roll = pos
@@ -68,46 +67,41 @@ class PlanarTracker(object):
             #                                 x, y,
             #                                 x_actual, y_actual,
             #                                 theta_actual, time()]], axis=0)
-        # finally:
-        #     save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' goToiPoint', self.logger)
-        #     self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
         print 'Longitutional error:', long_error, 'm | Lateral error:', lateral_error, 'm'
 
     def moveTowardsDynamicPoint(self, distance, theta):
         agent_id, x_actual, y_actual, z, theta_actual, pitch, roll = self.locate(self.agent_id)
         long_error = distance * cos(theta)
         angular_error = wrapAnglePi(theta)
-        self.logger = append(self.logger, [[0, 0, 0, 0, x_actual, y_actual, theta_actual, time(),0]], axis=0)
+        # self.logger = append(self.logger, [[0, 0, 0, 0, x_actual, y_actual, theta_actual, time(),0]], axis=0)
         feedback_linear = self.dynamic_long_control.controllerOutput(long_error)
         feedback_angular = self.dynamic_angular_control.controllerOutput(angular_error)
         feedback_linear = max(0, feedback_linear)
         self.actuate(feedback_linear, feedback_angular)
 
     def saveLog(self):
-        save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/pos', self.logger)
-        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/tracker_of_agent_'+str(self.agent_id), self.logger)
+        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-    def faceDirection(self, theta):
-        theta = wrapAnglePi(theta)
+    def faceDirection(self, theta_desired):
+        theta_desired = wrapAnglePi(theta_desired)
         print 'Facing direction.'
         bound = .02
-        self.angular_control.setGain(self.angular_ultimate_gain / 2)
-        theta_error = wrapAnglePi(theta - self.locate(self.agent_id)[4])
-        # try:
+        self.angular_control.setGain(self.angular_ultimate_gain / 4)
+        theta_error = wrapAnglePi(theta_desired - self.locate(self.agent_id)[4])
         while abs(theta_error) > bound:
             feedback_angular = self.angular_control.controllerOutput(theta_error)
             # print feedback_angular
             self.actuate(0, feedback_angular)
-            # print theta,self.locate(self.agent_id)[4]
+            # print theta_desired,self.locate(self.agent_id)[4]
             agent_id, x_actual, y_actual, z, theta_actual, pitch, roll = self.locate(self.agent_id)
-            theta_error = wrapAnglePi(theta - theta_actual)
-            # self.logger = append(self.logger, [[theta_error, 0,
-            #                                     0, 0,
-            #                                     x_actual, y_actual,
-            #                                     theta_actual, time()]], axis=0)
-        # finally:
-        #     save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' faceDirection', self.logger)
-        #     self.logger = [[0, 0, 0, 0, 0, 0, 0, 0]]
+            theta_error = wrapAnglePi(theta_desired - theta_actual)
+            self.logger = append(self.logger, [[0, 0,theta_error,
+                                                0,0, theta_desired,
+                                                x_actual, y_actual, theta_actual, time()]], axis=0)
+        self.actuate(0, 0)
+        agent_id, x_actual, y_actual, z, theta_actual, pitch, roll = self.locate(self.agent_id)
+        theta_error = wrapAnglePi(theta_desired - theta_actual)
         print 'Angular error:', theta_error, 'radians =', theta_error * 180 / pi, 'degrees'
 
     def followTrajectory(self, trajectory, x_calibrate=0, y_calibrate=0):
@@ -140,7 +134,7 @@ class PlanarTracker(object):
                                                 theta_actual, time(), 0]], axis=0)
 
         save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followTrajectory', self.logger)
-        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         print 'Reached end of trajectory.'
 
     def followPath(self, path, x_calibrate=0, y_calibrate=0):
@@ -178,7 +172,7 @@ class PlanarTracker(object):
                                                 theta_actual, time(), vel]], axis=0)
 
         save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/' + str(datetime.now()) + ' followPath', self.logger)
-        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.logger = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         print 'Reached end of path.'
 
     def followLoop(self):
