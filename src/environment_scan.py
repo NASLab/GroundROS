@@ -41,7 +41,7 @@ class Navigation(object):
         self.connection = LabNavigation()
         self.path_planner = GapFinder(self.gap)
         self.actuation = ROS2DimActuate()
-        self.actuation.setAngularVelocityLimit(.5)
+        self.actuation.setAngularVelocityLimit(1)
         self.tracker = PlanarTracker(self.actuation.actuate, self.connection.getStates)
 
         self.tracker.setID(self.agent_id)
@@ -78,7 +78,7 @@ class Navigation(object):
         # print 'Controlled Velocity:', controlled_velocity,
         # print 'closest_reading:',closest_reading,
         # print 'Crash avert velocity:',self.crash_avert_velocity
-        self.actuation.setTangentialVelocityLimit(min(.2, controlled_velocity))
+        self.actuation.setTangentialVelocityLimit(min(1, controlled_velocity))
 
         i += 1
         if i % temp_var is 0 and i < temp_var_2:

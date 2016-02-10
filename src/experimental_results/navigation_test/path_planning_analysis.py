@@ -4,7 +4,7 @@ import numpy as np
 from numpy import sin, cos, pi
 import matplotlib.pyplot as plt
 
-yaw_bound = 50 * pi / 180
+yaw_bound = 2 * pi / 180
 yaw_calibrate = pi / 180 * (0)
 x_offset_calibrate = .23
 y_offset_calibrate = -.08
@@ -35,14 +35,15 @@ x = [[]] * len(env_data)
 y = [[]] * len(env_data)
 # print len(env_data)
 
-for i in range(1, len(env_data) - 1):
+m=5
+for i in range(m, len(env_data) - m):
     if len(env_data[i]) > 0:
         x[i] = env_data[i][0]
         y[i] = env_data[i][1]
         yaw = env_data[i][2]
 
         # filter some of the readings; comment to see the effect
-        if len(env_data[i + 1]) == 0 or abs(yaw - env_data[i - 1][2]) > yaw_bound or abs(yaw - env_data[i + 1][2]) > yaw_bound:
+        if len(env_data[i + m]) == 0 or abs(yaw - env_data[i - m][2]) > yaw_bound or abs(yaw - env_data[i + m][2]) > yaw_bound:
             continue
 
         readings = env_data[i][3]

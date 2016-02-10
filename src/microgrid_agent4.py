@@ -18,7 +18,7 @@ angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other]
 kp = .4 / 1
 kd = .3
 
-targets = [[3, [1, -.2]]]
+targets = [[3, [1, -.3]]]
 log_length = 4096
 log = [[]] * log_length
 i = 0
@@ -37,7 +37,7 @@ class Navigation(object):
 
     def __init__(self):
 
-        self.gap = .6
+        self.gap = .7
         self.agent_id = 0
         self.stage = 0
         self.substage = 0
@@ -49,10 +49,10 @@ class Navigation(object):
 
         self.tracker.setID(self.agent_id)
 
-        sleep_time =7
-        while sleep_time>0:
+        sleep_time = 7
+        while sleep_time > 0:
             print "Mission starts in:", sleep_time
-            sleep_time-=1
+            sleep_time -= 1
             sleep(1)
         self.distance = []
         self.prev_closest_reading = 0.0
@@ -87,7 +87,6 @@ class Navigation(object):
             controlled_velocity = (closest_reading) * kp + self.crash_avert_velocity
             controlled_velocity = max(0.0, min(controlled_velocity, 1.0))
             self.actuation.setTangentialVelocityLimit(min(1, controlled_velocity))
-
 
             # find destination and analyze it
             target_object = self.connection.getStates(targets[self.stage][0])
@@ -127,8 +126,8 @@ class Navigation(object):
 
         elif self.substage == 1:
             # print self.path_planner.getFrontTravel(), distances[len(distances) / 2]+self.path_planner.lidar_offset - self.gap
-            front_travel = self.path_planner.getFrontTravel(distances,angles)
-            front_error = front_travel - targets[self.stage][1][1] 
+            front_travel = self.path_planner.getFrontTravel(distances, angles)
+            front_error = front_travel - targets[self.stage][1][1]
             print front_travel, front_error
             if abs(front_error) < .03:
                 self.substage = 2
@@ -138,7 +137,7 @@ class Navigation(object):
             self.actuation.actuate(.5 * front_error, 0)
 
         elif self.substage == 2:
-            front_travel = self.path_planner.getFrontTravel(distances,angles)
+            front_travel = self.path_planner.getFrontTravel(distances, angles)
             front_error = front_travel - targets[self.stage][1][1] - .2
             print front_travel, front_error
             if abs(front_error) < .03:
@@ -151,15 +150,13 @@ class Navigation(object):
         else:
             print 'stupid fuck'
 
-
-
         # log everything
-        i += 1
-        if i % temp_var is 0 and i < temp_var_2:
-            if self.substage==0:
-                log[i / temp_var] = [x, y, yaw, self.path_planner.readings_polar]
-            else:
-                log[i / temp_var] = [x, y, yaw, []]
+        # i += 1
+        # if i % temp_var is 0 and i < temp_var_2:
+        #     if self.substage==0:
+        #         log[i / temp_var] = [x, y, yaw, self.path_planner.readings_polar]
+        #     else:
+        #         log[i / temp_var] = [x, y, yaw, []]
 
         if self.stage == len(targets):
             self.tracker.saveLog()
@@ -169,7 +166,6 @@ class Navigation(object):
         elif self.stage > len(targets):  # just do nothing after that
             print "Stupid shit didn't unregister"
             sleep(100)
-
 
 
 if __name__ == "__main__":
