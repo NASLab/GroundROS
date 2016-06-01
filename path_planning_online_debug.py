@@ -15,7 +15,7 @@ from path_planning import GapFinder
 from communication import LabNavigation
 
 
-every_other = 1
+every_other = 3
 increment = pi * .5 / 180
 angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other]
 
@@ -62,8 +62,8 @@ class LidarLogger(object):
         # print self.path_planner
         x, y = self.path_planner.polarToCartesian()
         crap1, robot_x, robot_y, robot_z, robot_yaw, crap, crap2 = self.connection.getStates(0)
-        target_x = -.5
-        target_y = 2.7
+        target_x = 1.3492891802
+        target_y = -0.65161101617
         diff_x = target_x - robot_x
         diff_y = target_y - robot_y
         distance = sqrt(diff_x**2 + diff_y**2)
@@ -79,7 +79,7 @@ class LidarLogger(object):
         # print scan
         # self.logger = scan
         # print "Lidar Scan Recieved. Logging data..."
-        f0 = plt.figure(1,figsize=(9,9))
+        f0 = plt.figure(1, figsize=(9, 9))
         ax0 = f0.add_subplot(111)
         nums = len(self.path_planner.possible_travel)
         # for i in range(nums):
@@ -110,8 +110,9 @@ class LidarLogger(object):
         #     ax0.plot(target_distance * cos(target_angle),
         #              target_distance * sin(target_angle), 'ro', markersize=20)
         ax0.plot(subgoal_x, subgoal_y, 'ko', markersize=20, label='Subgoal Candidate')
-        ax0.plot(robot_x + subgoal_distance * cos(robot_yaw - subgoal_angle),
-                 robot_y + subgoal_distance * sin(robot_yaw - subgoal_angle), 'go', markersize=20, label='Best Subgoal')
+        if subgoal_distance:
+            ax0.plot(robot_x + subgoal_distance * cos(robot_yaw - subgoal_angle),
+                     robot_y + subgoal_distance * sin(robot_yaw - subgoal_angle), 'go', markersize=20, label='Best Subgoal')
         ax0.plot(robot_x, robot_y, 'ms', markersize=10, label='Robot')
         ax0.plot(target_x, target_y, 'cs', markersize=10, label='Destination')
         ax0.plot(x, y, 'b.', markersize=10, label='Possible Travel')

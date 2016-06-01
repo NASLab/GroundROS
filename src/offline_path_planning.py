@@ -64,14 +64,15 @@ class Navigation(object):
         if not self.position or not self.target:
             return
         # target = withDistance(self.target[0], self.target[1], self.target[2], targets[self.stage][1][0])
+        robot_x, robot_y, robot_yaw = self.position
         target = self.target
         # print 'Target is at', target
+        plot_pose = self.position
         plt.clf()
-        plt.plot(self.position[0], self.position[1], 'ms', markersize=10, label='Robot')
-        plt.arrow(self.position[0], self.position[1], self.gap * cos(self.position[2]), self.gap * sin(self.position[2]))
-        plt.plot(self.target[0], self.target[1], 'cs', markersize=10, label='Destination')
+        plt.plot(plot_pose[0], plot_pose[1], 'ms', markersize=10, label='Robot')
+        plt.arrow(plot_pose[0], plot_pose[1], self.gap * cos(plot_pose[2]), self.gap * sin(plot_pose[2]))
+        plt.plot(target[0], target[1], 'cs', markersize=10, label='Destination')
         plt.plot(target[0], target[1], 'cs', markersize=5)
-        robot_x, robot_y, robot_yaw = self.position
         distances = list(data.ranges)[0::every_other]
 
         if self.substage == 0:
@@ -146,7 +147,7 @@ class Navigation(object):
         # axes.set_xlim([-15,15])
         # axes.set_ylim([-15,15])
         plt.axes().set_aspect('equal', 'datalim')
-        plt.pause(.001)
+        plt.pause(.01)
 
 if __name__ == "__main__":
     nav = Navigation()
