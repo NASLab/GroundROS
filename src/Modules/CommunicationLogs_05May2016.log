@@ -1,0 +1,19 @@
+2016-05-05 16:42:05,492-18697-ERROR-Error in MessageVerification
+Traceback (most recent call last):
+  File "/home/naslab/Barzin/GroundROS/src/Modules/communication.py", line 85, in connectToClient
+    self.sock, address = self.sock.accept()
+  File "/usr/lib/python2.7/socket.py", line 202, in accept
+    sock, addr = self._sock.accept()
+KeyboardInterrupt
+2016-05-05 16:43:24,268-18712-ERROR-Error in MessageVerification
+Traceback (most recent call last):
+  File "/home/naslab/Barzin/GroundROS/src/Modules/communication.py", line 85, in connectToClient
+    self.sock, address = self.sock.accept()
+  File "/usr/lib/python2.7/socket.py", line 202, in accept
+    sock, addr = self._sock.accept()
+KeyboardInterrupt
+2016-05-05 16:43:30,401-18743-INFO-Connection accepted from ('192.168.0.22', 44222)
+2016-05-05 16:43:30,402-18743-INFO-Waiting for message.
+2016-05-05 16:44:40,059-18755-INFO-Connection accepted from ('192.168.0.22', 44362)
+2016-05-05 16:44:40,060-18755-INFO-Sent: what now
+2016-05-05 16:44:40,060-18755-INFO-Connection closed.

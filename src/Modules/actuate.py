@@ -26,7 +26,6 @@ class ROS2DimActuate(object):
 
     def __init__(self):
         # setup ROS node and topics
-        rospy.init_node('two_dim_actuation_control')
         self.pub_cmd = rospy.Publisher('/husky/cmd_vel', Twist, queue_size=1)
         self.twist_msg = Twist()
 
@@ -57,5 +56,6 @@ class ROS2DimActuate(object):
             self.pub_cmd.publish(stop_msg)
             raise ActuationError('Actuation command is NaN.')
         else:
+            # print 'twist:',self.twist_msg
             self.pub_cmd.publish(self.twist_msg)
         self.rate.sleep()

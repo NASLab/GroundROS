@@ -1,0 +1,8 @@
+2016-03-22 17:24:17,898-21093-INFO-Connecting to the server on 192.168.0.25
+2016-03-22 17:24:17,898-21093-ERROR-Error in MessageVerification
+Traceback (most recent call last):
+  File "/home/naslab/Barzin/GroundROS/src/Modules/communication.py", line 69, in connectToServer
+    self.sock.connect(server_address)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+    return getattr(self._sock,name)(*args)
+error: [Errno 111] Connection refused

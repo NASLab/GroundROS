@@ -1,4 +1,4 @@
-from numpy import pi, cos, append, save
+from numpy import pi, cos, append, save, arctan2,sqrt
 from rotation import rotate2DimFrame, wrapAnglePi
 from control_system import Proportional
 from datetime import datetime  # remove later
@@ -78,6 +78,24 @@ class PlanarTracker(object):
         feedback_angular = self.dynamic_angular_control.controllerOutput(angular_error)
         feedback_linear = max(0, feedback_linear)
         self.actuate(feedback_linear, feedback_angular)
+
+    def moveTowardsGlobalPoint(self,x,y):
+        agent_id, x_actual, y_actual, z, theta_actual, pitch, roll = self.locate(self.agent_id)
+        # print 'Pose:',x_actual, y_actual, z, theta_actual, pitch, roll
+        # print 'target',x,y
+        x_error = x - x_actual
+        y_error = y - y_actual
+        # long_error, lateral_error = rotate2DimFrame(x_error, y_error,-wrapAnglePi(theta_actual))
+        long_error = sqrt(x_error**2+y_error**2)
+        angular_error = wrapAnglePi(arctan2(y_error, x_error)-theta_actual)
+        # print 'error',long_error,lateral_error,arctan2(y_error, x_error)*180/pi,theta_actual*180/pi,angular_error*180/pi
+        # self.logger = append(self.logger, [[0, 0, 0, 0, x_actual, y_actual, theta_actual, time(),0]], axis=0)
+        feedback_linear = self.dynamic_long_control.controllerOutput(long_error)
+        # print 'cmd vel:',feedback_linear
+        feedback_angular = self.dynamic_angular_control.controllerOutput(angular_error)
+        feedback_linear = max(0, feedback_linear)
+        self.actuate(feedback_linear, feedback_angular)
+
 
     def saveLog(self):
         save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/tracker_of_agent_'+str(self.agent_id), self.logger)

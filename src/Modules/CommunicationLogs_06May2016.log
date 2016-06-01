@@ -1,0 +1,9 @@
+2016-05-06 12:56:09,230-22815-INFO-Connecting to the server on 192.168.0.25
+2016-05-06 12:56:09,230-22815-INFO-Connected To ('192.168.0.25', 65400).
+2016-05-06 12:56:09,230-22815-INFO-Sent: something
+2016-05-06 12:56:09,230-22768-INFO-Connection accepted from ('192.168.0.25', 49318)
+2016-05-06 12:56:09,230-22815-INFO-Waiting for message.
+2016-05-06 12:56:09,230-22768-INFO-Sent: what now
+2016-05-06 12:56:09,230-22815-INFO-Successful message verification: what now
+2016-05-06 12:56:09,230-22768-INFO-Connection closed.
+2016-05-06 12:56:09,230-22815-INFO-Connection closed.

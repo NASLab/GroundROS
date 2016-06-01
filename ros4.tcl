@@ -27,7 +27,7 @@ spawn bash -c "scp -r administrator@$ip:$dir/experimental_results/*.npy ./src/ex
 authenticate
 
 send "\n"
-spawn bash -c "scp -r ./src/Modules/*.py administrator@$ip:$dir"
+spawn bash -c "scp -r ./src/Modules/*.py administrator@$ip:$dir/Modules/"
 authenticate
 
 send "\n"
@@ -38,12 +38,6 @@ send "\n"
 spawn ssh administrator@$ip
 authenticate
 expect "administrator"
-send "rm $dir/experimental_results/*.npy\r"
 send "chmod +x $dir/*.py\r"
-send "cd ~/barzin_catkin_ws\r"
-send "catkin_make\r"
-send "source devel/setup.bash\r"
-#### send "rosrun path_tracking path_tracker_experiment.py\r"
-send "rosrun path_tracking microgrid_agent4.py"
-
+send "source ~/barzin_catkin_ws/devel/setup.bash\r"
 interact

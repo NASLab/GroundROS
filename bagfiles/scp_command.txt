@@ -1,0 +1,2 @@
+scp -r administrator@192.168.4.11:bagfiles/*.bag ./
+

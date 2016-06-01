@@ -1,30 +1,35 @@
 #!/usr/bin/env python
 
 import rospy
-from numpy import arctan2, sqrt, arange, pi, sin, cos, save
+from geometry_msgs.msg import Pose2D
+from numpy import arctan2, sqrt, arange, pi, sin, cos
 from sys import path
 path.append('Modules/')
-from communication import LabNavigation
+from communication import LabNavigation, MessageVerification
 from sensor_msgs.msg import LaserScan
 from actuate import ROS2DimActuate
 from tracker import PlanarTracker
 from time import sleep, time
 from path_planning import GapFinder
+# from multiprocessing import Process, Value
 # from datetime import datetime
 
-every_other = 3
+every_other_lidar_reading = 4
+data_log = 0
+dynamic_env = 1
+use_message = 1
+wait_for_confirmation = 0
+targets = [[2, [1, -.2]], [1, [1, -.2]]]
+
+if data_log:
+    pose = Pose2D()
+
+# DO NOT CHANGE BELOW
 increment = pi * .5 / 180
-angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other]
+angles = arange(-3 * pi / 4, 3 * pi / 4 + increment, increment)[0::every_other_lidar_reading]
 kp = .4 / 1
 kd = .3
-
-targets = [[3, [1, -.3]]]
-log_length = 4096
-log = [[]] * log_length
-i = 0
-finished_edge = False
-temp_var = 5
-temp_var_2 = temp_var * log_length
+inf = float('inf')
 
 
 def withDistance(x, y, theta, distance):
@@ -37,23 +42,39 @@ class Navigation(object):
 
     def __init__(self):
 
-        self.gap = .7
+        self.gap = .6
         self.agent_id = 0
         self.stage = 0
         self.substage = 0
 
+        # self.go_to_target = Value('b',False)
+        # self.
+
+        if data_log:
+            self.position_publisher = rospy.Publisher('husky/position', Pose2D, queue_size=1)
+            self.target_publisher = rospy.Publisher('husky/target', Pose2D, queue_size=1)
+
         self.connection = LabNavigation()
+        if use_message:
+            self.messaging = MessageVerification(True)
+            self.messaging.connectToClient('192.168.4.11')
         self.path_planner = GapFinder(self.gap)
         self.actuation = ROS2DimActuate()
         self.tracker = PlanarTracker(self.actuation.actuate, self.connection.getStates)
 
         self.tracker.setID(self.agent_id)
+        if wait_for_confirmation:
+            self.messaging = MessageVerification(True)
+            self.messaging.connectToClient('192.168.4.11')
+            if self.station_messaging.verifyMessage("start mission") is not True:
+                return
 
-        sleep_time = 7
-        while sleep_time > 0:
-            print "Mission starts in:", sleep_time
-            sleep_time -= 1
-            sleep(1)
+        else:
+            sleep_time = 7
+            while sleep_time > 0:
+                print "Mission starts in:", sleep_time
+                sleep_time -= 1
+                sleep(1)
         self.distance = []
         self.prev_closest_reading = 0.0
         self.prev_time = time()
@@ -66,12 +87,14 @@ class Navigation(object):
 
     def move(self, data):
         agent_id, x, y, z, yaw, pitch, roll = self.connection.getStates(self.agent_id)
-        print '-----------------------------'
-        global i
-        global finished_edge
+        if data_log:
+            pose.x = x
+            pose.y = y
+            pose.theta = yaw
+            self.position_publisher.publish(pose)
 
         # extract distance data and analyze them
-        distances = list(data.ranges)[0::every_other]
+        distances = list(data.ranges)[0::every_other_lidar_reading]
 
         if self.substage == 0:
             self.path_planner.filterReadings(distances, angles)
@@ -79,30 +102,38 @@ class Navigation(object):
 
             # dynamic obstacle collision avoidance
             closest_reading = min(closest_reading, 2 * self.gap)
-            time_now = time()
-            self.crash_avert_velocity = (self.crash_avert_velocity + (closest_reading - self.prev_closest_reading) * kd / (time() - self.prev_time)) / 2
-            self.crash_avert_velocity = min(0.0, self.crash_avert_velocity)
+            if dynamic_env:
+                time_now = time()
+                self.crash_avert_velocity = (self.crash_avert_velocity + (closest_reading - self.prev_closest_reading) * kd / (time() - self.prev_time)) / 2
+                self.crash_avert_velocity = min(0.0, self.crash_avert_velocity)
 
-            # set velocity based on dynamic obstacle movement
-            controlled_velocity = (closest_reading) * kp + self.crash_avert_velocity
-            controlled_velocity = max(0.0, min(controlled_velocity, 1.0))
-            self.actuation.setTangentialVelocityLimit(min(1, controlled_velocity))
+                # set velocity based on dynamic obstacle movement
+                controlled_velocity = (closest_reading) * kp + self.crash_avert_velocity
+                controlled_velocity = max(0.0, min(controlled_velocity, 1.0))
+                self.actuation.setTangentialVelocityLimit(min(1, controlled_velocity))
 
             # find destination and analyze it
             target_object = self.connection.getStates(targets[self.stage][0])
+            if data_log:
+                pose.x = target_object[1]
+                pose.y = target_object[2]
+                pose.theta = target_object[4]
+                self.target_publisher.publish(pose)
+
             target = withDistance(target_object[1], target_object[2], target_object[4], targets[self.stage][1][0])
-            # print target
             target_x = target[0]
             target_y = target[1]
             diff_x = target_x - x
             diff_y = target_y - y
             self.distance = sqrt(diff_x**2 + diff_y**2)
 
-            print 'here1'
             # plan path to the target
             angle = arctan2(diff_y, diff_x) - yaw  # find direction towards target in robots coordinate frame
             subgoal_distance, subgoal_angle = self.path_planner.planPath(self.distance, -angle)
             subgoal_angle2 = -subgoal_angle
+            # self.go_to_target=True
+            # self.subgoal_x = x + subgoal_distance * cos(yaw - subgoal_angle)
+            # self.subgoal_y = y + subgoal_distance * sin(yaw - subgoal_angle)
 
             # go to the point designated by path planner
             self.tracker.moveTowardsDynamicPoint(subgoal_distance, subgoal_angle2)
@@ -120,47 +151,41 @@ class Navigation(object):
                 self.substage = 1
                 sleep(1)
 
-            # save some of the variable needed for next iteration
-            self.prev_closest_reading = closest_reading
-            self.prev_time = time_now
+            if dynamic_env:
+                # save some of the variable needed for next iteration
+                self.prev_closest_reading = closest_reading
+                self.prev_time = time_now
 
         elif self.substage == 1:
-            # print self.path_planner.getFrontTravel(), distances[len(distances) / 2]+self.path_planner.lidar_offset - self.gap
+            # self.go_to_target = False
             front_travel = self.path_planner.getFrontTravel(distances, angles)
             front_error = front_travel - targets[self.stage][1][1]
-            print front_travel, front_error
             if abs(front_error) < .03:
                 self.substage = 2
-                print 'BREAKINGGGGGGGGGGGGGGGGGGGG'
-                sleep(5)
-                # break
+                print 'Reached Connection point.'
+                if use_message:
+                    self.messaging.sendMessage("make connection")
+                    while not self.messaging.verifyMessage("connection done"):
+                        sleep(.5)
+                else:
+                    sleep(5)
             self.actuation.actuate(.5 * front_error, 0)
 
         elif self.substage == 2:
             front_travel = self.path_planner.getFrontTravel(distances, angles)
-            front_error = front_travel - targets[self.stage][1][1] - .2
-            print front_travel, front_error
+            front_error = front_travel - .1
             if abs(front_error) < .03:
                 self.stage += 1
                 self.substage = 0
-                print 'BREAKINGGGGGGGGGGGGGGGGGGGG'
-                # break
+                print 'Departed from connection point.'
             self.actuation.actuate(.5 * front_error, 0)
 
         else:
-            print 'stupid fuck'
-
-        # log everything
-        # i += 1
-        # if i % temp_var is 0 and i < temp_var_2:
-        #     if self.substage==0:
-        #         log[i / temp_var] = [x, y, yaw, self.path_planner.readings_polar]
-        #     else:
-        #         log[i / temp_var] = [x, y, yaw, []]
+            print 'stupid fuck did somethinng weird'
 
         if self.stage == len(targets):
-            self.tracker.saveLog()
-            save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/planner_of_agent_' + str(self.agent_id), log)
+            # self.tracker.saveLog()
+            # save('/home/administrator/barzin_catkin_ws/src/path_tracking/scripts/experimental_results/planner_of_agent_' + str(self.agent_id), log)
             self.subscriber.unregister()
             print '\033[92m' + '\033[1m' + 'AND DONE' + '\033[0m'
         elif self.stage > len(targets):  # just do nothing after that
