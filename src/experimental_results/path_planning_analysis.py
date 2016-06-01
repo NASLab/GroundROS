@@ -4,11 +4,14 @@ import numpy as np
 from numpy import sin, cos, pi
 import matplotlib.pyplot as plt
 
+yaw_boundr = 1 * pi / 180
+
+
 f0 = plt.figure()
 # for p in range(9):
-yaw_calibrate = pi/180 * (0)
-x_offset_calibrate = .26
-y_offset_calibrate = -.064
+yaw_calibrate = pi / 180 * (0)
+x_offset_calibrate = .3
+y_offset_calibrate = 0
 # data = np.load('pos.npy')[5:, :]
 # print len(data)
 # error_long = data[:, 0]
@@ -32,12 +35,11 @@ env_data = np.load('env.npy')[1:]
 x = [[]] * len(env_data)
 y = [[]] * len(env_data)
 # print len(env_data)
-for i in range(len(env_data)):
+for i in range(1, len(env_data) - 1):
     if len(env_data[i]) > 0:
         x[i] = env_data[i][0]
         y[i] = env_data[i][1]
         yaw = env_data[i][2]
-        # print yaw
         readings = env_data[i][3]
         readings_x = [[]] * len(readings)
         readings_y = [[]] * len(readings)
@@ -48,16 +50,21 @@ for i in range(len(env_data)):
             # print k,j,len(readings_x)
             x_temp = readings[j][0] * cos(-readings[j][1])
             y_temp = readings[j][0] * sin(-readings[j][1])
-            x_temp2 = x_temp*cos(yaw_calibrate) - y_temp*sin(yaw_calibrate) + x_offset_calibrate
-            y_temp2 = y_temp*cos(yaw_calibrate) + x_temp*sin(yaw_calibrate) + y_offset_calibrate
-            readings_x[k] = x_temp2*cos(yaw) - y_temp2*sin(yaw) + x[i]
-            readings_y[k] = y_temp2*cos(yaw) + x_temp2*sin(yaw) + y[i]
+            x_temp2 = x_temp * \
+                cos(yaw_calibrate) - y_temp * \
+                sin(yaw_calibrate) + x_offset_calibrate
+            y_temp2 = y_temp * \
+                cos(yaw_calibrate) + x_temp * \
+                sin(yaw_calibrate) + y_offset_calibrate
+            readings_x[k] = x_temp2 * cos(yaw) - y_temp2 * sin(yaw) + x[i]
+            readings_y[k] = y_temp2 * cos(yaw) + x_temp2 * sin(yaw) + y[i]
             k += 1
-        ax0.plot(readings_x, readings_y,'r,')
+        ax0.plot(readings_x, readings_y, 'r.')
 
-ax0.plot([], [], ',r', label='Lidar Reading'+str( y_offset_calibrate ))
+ax0.plot([], [], ',r', label='Lidar Reading' + str(y_offset_calibrate))
 # print x
-ax0.plot([value for value in x if value], [value for value in y if value], 'go', lw=3)
+ax0.plot([value for value in x if value], [
+         value for value in y if value], 'go', lw=3)
 
 
 # env_y = np.load('env.npy')[1]
